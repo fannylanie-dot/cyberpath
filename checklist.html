@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cybersecurity Roadmap Checklist</title>
+<style>
+:root{--bg:#f1f4f8;--card:#fff;--tx:#1b2430;--mu:#5d6b7a;--bd:#d3dbe5;--ac:#1fa84f;--ac2:#e3f6ea;--ln:#1565c0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b111b;--card:#1a2436;--tx:#e8eef6;--mu:#93a1b3;--bd:#27344a;--ac:#8de64a;--ac2:#18301b;--ln:#7db7ff}}
+:root[data-theme="dark"]{--bg:#0b111b;--card:#1a2436;--tx:#e8eef6;--mu:#93a1b3;--bd:#27344a;--ac:#8de64a;--ac2:#18301b;--ln:#7db7ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:820px;margin:0 auto;padding:16px}
+h1{margin:0 0 4px;font-size:1.7rem}.sub{color:var(--mu);margin:0 0 12px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;z-index:2}
+.bar{height:12px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ac);width:0;transition:width .3s}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:14px 0}
+.hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+h2{margin:0;font-size:1.15rem}.tag{background:var(--ac2);color:var(--ac);border-radius:6px;padding:1px 8px;font-size:.8rem;font-weight:700}
+.it{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--bd)}
+.it input{width:20px;height:20px;margin-top:3px;accent-color:var(--ac);flex:none}
+.it.d span{text-decoration:line-through;color:var(--mu)}
+.it.k span{font-weight:700}
+a{color:var(--ln)}
+.note{color:var(--mu);font-size:.9rem;margin:4px 0 6px}
+button{background:none;border:0;color:var(--mu);text-decoration:underline;cursor:pointer;font:inherit}
+</style></head><body><div class="w">
+<h1>🛡️ Cybersecurity Roadmap Checklist</h1>
+<p class="sub">Free resources · about 10 hours a week · 10–12 months. Tick items as you finish them.</p>
+<div class="top"><div class="bar"><i id="pb"></i></div><div class="sub" id="pt" style="margin:4px 0 0"></div></div>
+<div id="app"></div>
+<p class="note">Free tiers change, so check each site's current terms. Only attack machines you own or practice platforms built for it.</p>
+<button id="rs">Reset all progress</button></div>
+<script>
+const P=[
+["Phase 0: Setup","Week 1","Build your lab and workspace.",[
+["Install VirtualBox","https://www.virtualbox.org"],["Create a Kali Linux VM"],["Create an Ubuntu VM"],["Create a Windows evaluation VM (Microsoft Evaluation Center)"],["Make a GitHub account for your portfolio","https://github.com"],["Pick a notes app (Obsidian or similar)"],["Finish the Cyber Foundations course as a warm-up"]]],
+["Phase 1: Networking","Weeks 2–8","Understand how data moves.",[
+["Cisco NetAcad: Networking Basics","https://www.netacad.com"],["Cisco NetAcad: Introduction to Cybersecurity","https://www.netacad.com"],["Professor Messer: Network+ videos","https://www.professormesser.com"],["Install Wireshark and capture your own DNS and HTTP traffic","https://www.wireshark.org"],["CHECKPOINT: explain what happens when you type a URL, and point to each step in a capture",1]]],
+["Phase 2: Linux and Windows","Weeks 6–12","Get comfortable in both systems.",[
+["Linux Journey lessons","https://linuxjourney.com"],["OverTheWire Bandit: reach level 20+","https://overthewire.org/wargames/bandit/"],["Microsoft Learn: Windows and PowerShell modules","https://learn.microsoft.com"],["CHECKPOINT: navigate, search, manage permissions and read logs in Linux and Windows without help",1]]],
+["Phase 3: Programming","Weeks 8–16","Automate things with code.",[
+["Automate the Boring Stuff with Python (free online)","https://automatetheboringstuff.com"],["SQLBolt SQL lessons","https://sqlbolt.com"],["Learn basic Bash scripting"],["PROJECT: write a port scanner"],["PROJECT: write a log parser"],["PROJECT: write a script that checks hashes against a wordlist in your lab"]]],
+["Phase 4: Security fundamentals","Weeks 12–24","Learn the core concepts.",[
+["Professor Messer: Security+ videos","https://www.professormesser.com"],["Use CompTIA's current exam objectives as your checklist"],["Check whether ISC2 Certified in Cybersecurity training is currently free","https://www.isc2.org"],["Do free Security+ practice questions","https://www.professormesser.com"],["CHECKPOINT: score consistently on practice questions",1]]],
+["Phase 5A: Defender practice","Weeks 20–40","Alternate with 5B every 1–2 weeks.",[
+["Build a home lab with Wazuh or Security Onion","https://wazuh.com"],["CyberDefenders challenges","https://cyberdefenders.org"],["LetsDefend free tier","https://letsdefend.io"],["Study MITRE ATT&CK","https://attack.mitre.org"],["Learn Windows event logs (e.g. event 4625 failed logins)"],["PROJECT: detect an SSH brute-force attack against your own lab",1]]],
+["Phase 5B: Hacker practice","Weeks 20–40","Alternate with 5A every 1–2 weeks.",[
+["PortSwigger Academy: SQL injection labs","https://portswigger.net/web-security"],["PortSwigger Academy: XSS labs","https://portswigger.net/web-security"],["PortSwigger Academy: access control labs","https://portswigger.net/web-security"],["picoCTF beginner challenges","https://picoctf.org"],["Attack OWASP Juice Shop in your lab","https://owasp.org/www-project-juice-shop/"],["Learn Nmap","https://nmap.org/book/"],["Burp Suite Community Edition","https://portswigger.net/burp/communitydownload"],["Free TryHackMe and Hack The Box Academy rooms"],["PROJECT: attack your own vulnerable VM, then find the attack in your defender logs",1]]],
+["Phase 6: Prove it and get hired","Months 9–12","Show your work.",[
+["Publish 3+ write-ups on GitHub (attack, detection, fix)"],["Take Security+ when practice scores are steady"],["Apply for help desk, IT support or SOC Tier 1 roles"],["Join a CTF event","https://ctftime.org"],["Attend a local security meetup"],["Plan next certs: CySA+ (defence) or eJPT/PNPT (pentesting)"]]]];
+let S={};try{S=JSON.parse(localStorage.getItem("rm1")||"{}")}catch(e){}
+const tot=P.reduce((a,p)=>a+p[3].length,0);
+function draw(){let h="",n=0;P.forEach((p,pi)=>{let c=0;p[3].forEach((_,i)=>{if(S[pi+"."+i])c++});n+=c;
+h+=`<div class="card"><div class="hd"><h2>${p[0]}</h2><span class="tag">${p[1]} · ${c}/${p[3].length}</span></div><div class="note">${p[2]}</div>`;
+p[3].forEach((it,i)=>{const k=pi+"."+i,d=S[k];h+=`<label class="it${d?" d":""}${it[2]?" k":""}"><input type="checkbox" data-k="${k}" ${d?"checked":""}><span>${it[1]?`<a href="${it[1]}" target="_blank" rel="noopener noreferrer">${it[0]}</a>`:it[0]}</span></label>`});h+="</div>"});
+app.innerHTML=h;pb.style.width=100*n/tot+"%";pt.textContent=n+" of "+tot+" steps done ("+Math.round(100*n/tot)+"%)";
+app.querySelectorAll("input").forEach(i=>i.onchange=()=>{if(i.checked)S[i.dataset.k]=1;else delete S[i.dataset.k];try{localStorage.setItem("rm1",JSON.stringify(S))}catch(e){}draw()})}
+rs.onclick=()=>{if(confirm("Reset all progress?")){S={};try{localStorage.setItem("rm1","{}")}catch(e){}draw()}};
+draw();
+</script></body></html>

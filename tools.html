@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tools</title>
+<style>
+:root{--bg:#f1f4f8;--card:#fff;--tx:#1b2430;--mu:#5d6b7a;--bd:#d3dbe5;--ac:#1fa84f;--ac2:#e3f6ea;--code:#eef1f4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b111b;--card:#1a2436;--tx:#e8eef6;--mu:#93a1b3;--bd:#27344a;--ac:#8de64a;--ac2:#18301b;--code:#0c121c}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:900px;margin:0 auto;padding:12px 16px 40px}h1{margin:6px 0}h2{margin:0 0 6px}.mu{color:var(--mu);margin:0 0 10px}
+.tabs{position:sticky;top:0;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 0;z-index:2}
+.tabs button{flex:none;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:6px 14px;font:inherit;cursor:pointer}.tabs button.on{border-color:var(--ac);background:var(--ac2)}
+section{display:none;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px}section.on{display:block}
+input,textarea,select{width:100%;background:var(--code);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font:inherit;margin:4px 0}textarea{min-height:90px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem}
+pre{background:var(--code);border-radius:8px;padding:10px;overflow-x:auto;font:.86rem/1.5 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap}
+.b{background:var(--ac);color:#04200d;border:0;border-radius:8px;padding:7px 12px;font:inherit;font-weight:700;cursor:pointer;margin:3px 3px 3px 0}
+.term{background:#0c121c;color:#8de64a;border-radius:10px;padding:10px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;margin:8px 0}.term .o{white-space:pre-wrap;max-height:320px;overflow-y:auto}.term .l{display:flex;gap:6px;margin-top:4px}.term input{background:transparent;border:0;color:#fff;padding:0;outline:none;min-width:0;margin:0}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.86rem}td,th{border:1px solid var(--bd);padding:4px 8px;text-align:left;white-space:nowrap}tr.p{cursor:pointer}tr.p:hover{background:var(--ac2)}
+details{background:var(--code);border-radius:8px;padding:8px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+</style></head><body><div class="w"><h1>🧰 Practice Tools</h1><div class="tabs" id="tabs"></div>
+
+<section data-n="Terminals"><h2>Terminals</h2><p class="mu">Simulated shells with hidden flags to find.</p>
+<select id="ts" aria-label="Choose terminal"><option value="l">Linux (try: help, ls -la, cd logs, cat auth.log | grep Failed)</option><option value="w">Windows (try: help, dir, tasklist, ipconfig)</option><option value="s">SQL playground (try: SELECT * FROM users)</option></select><div class="term" id="tm"></div></section>
+<section data-n="Subnet"><h2>Subnet calculator</h2><p class="mu">Enter an address with a prefix, e.g. 192.168.1.130/25.</p><input id="si" value="192.168.1.130/25" aria-label="CIDR"><pre id="so"></pre></section>
+<section data-n="Encode/Decode"><h2>Encoder / decoder</h2><p class="mu">Encoding is not encryption: anyone can reverse these.</p><textarea id="ei" aria-label="Input">Hello, hacker!</textarea>
+<div id="eb"></div><textarea id="eo" readonly aria-label="Output"></textarea></section>
+<section data-n="Hashes"><h2>Hash generator</h2><p class="mu">Change one character and watch the whole hash change.</p><input id="hi" value="password" aria-label="Text to hash"><pre id="ho"></pre></section>
+<section data-n="Convert"><h2>Number converter</h2><input id="ci" value="65" aria-label="Number"><select id="cb"><option value="10">Decimal</option><option value="2">Binary</option><option value="16">Hex</option></select><pre id="co"></pre></section>
+<section data-n="Password"><h2>Password strength tester</h2><p class="mu">Runs only in your browser. Still, test examples, not real passwords.</p><input id="pi" value="Summer2024!" aria-label="Test password"><pre id="po"></pre></section>
+<section data-n="Log analyser"><h2>SSH log analyser</h2><p class="mu">Paste auth.log lines. It finds brute-force patterns, like a mini SIEM.</p><textarea id="li" style="min-height:160px" aria-label="Log"></textarea><button class="b" id="ls">Load sample</button><button class="b" id="la">Analyse</button><pre id="lo"></pre></section>
+<section data-n="Nmap sim"><h2>Nmap simulator</h2><p class="mu">Scan a fake lab: 10.10.10.10 (Kali), .20 (Ubuntu), .30 (Windows). Challenge: find the hidden web app port on .20 and explain why a default scan missed it.</p><div class="term" id="nt"></div></section>
+<section data-n="Packet analyser"><h2>Packet analyser</h2><p class="mu">A sample capture. Filters: dns, tcp, http, icmp, arp, ip.addr == 10.10.10.66, tcp.port == 22, tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</p>
+<input id="pfi" placeholder="Display filter" aria-label="Display filter"><div class="tw"><table><thead><tr><th>#</th><th>Source</th><th>Destination</th><th>Proto</th><th>Info</th></tr></thead><tbody id="pt"></tbody></table></div><pre id="pd">Click a packet.</pre>
+<details><summary>Q: Which packets are the TCP handshake?</summary>Packets 7, 8, 9 (SYN, SYN-ACK, ACK).</details><details><summary>Q: Which host is port scanning, and which port is open?</summary>10.10.10.66. Port 21 got RST (closed); port 22 got SYN-ACK (open).</details><details><summary>Q: Which filter shows only the scanner's new connection attempts?</summary><code>ip.addr == 10.10.10.66 &amp;&amp; tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</code></details></section>
+</div>
+<script>
+function sub(v){const m=v.trim().match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)\/(\d+)$/);if(!m)return"Enter an address like 192.168.1.130/25";const o=m.slice(1,5).map(Number),p=+m[5];if(o.some(x=>x>255)||p>32)return"Invalid address or prefix";
+const ip=((o[0]<<24)|(o[1]<<16)|(o[2]<<8)|o[3])>>>0,mask=p?(0xFFFFFFFF<<(32-p))>>>0:0,net=(ip&mask)>>>0,bc=(net|(~mask>>>0))>>>0,f=n=>[n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].join("."),big=p<31;
+return`Network:     ${f(net)}/${p}\nMask:        ${f(mask)}\nBroadcast:   ${f(bc)}\nFirst host:  ${f(big?net+1:net)}\nLast host:   ${f(big?bc-1:bc)}\nUsable hosts: ${p==32?1:p==31?2:2**(32-p)-2}`}
+const E={b64e:s=>btoa(unescape(encodeURIComponent(s))),b64d:s=>decodeURIComponent(escape(atob(s.trim()))),ue:s=>encodeURIComponent(s),ud:s=>decodeURIComponent(s),
+hxe:s=>[...new TextEncoder().encode(s)].map(b=>b.toString(16).padStart(2,"0")).join(" "),hxd:s=>new TextDecoder().decode(new Uint8Array(s.trim().split(/\s+/).map(h=>parseInt(h,16)))),
+r13:s=>s.replace(/[a-z]/gi,c=>String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26))};
+function conv(v,b){const n=parseInt(v.trim(),b);if(isNaN(n))return"Not a valid number in that base.";return`Binary:  ${n.toString(2)}\nDecimal: ${n}\nHex:     ${n.toString(16).toUpperCase()}\nASCII:   ${n>31&&n<127?String.fromCharCode(n):"(not printable)"}`}
+function pw(s){if(!s)return"Type a test password to analyse (never type a real one).";let c=0;if(/[a-z]/.test(s))c+=26;if(/[A-Z]/.test(s))c+=26;if(/\d/.test(s))c+=10;if(/[^A-Za-z0-9]/.test(s))c+=33;
+const bits=Math.round(s.length*Math.log2(c)),sec=Math.pow(2,bits)/1e10/2,u=[[60,1,"seconds"],[3600,60,"minutes"],[86400,3600,"hours"],[3.15e7,86400,"days"],[3.15e9,3.15e7,"years"]],r=u.find(x=>sec<x[0]);
+const t=sec<1?"instantly":r?(sec/r[1]).toFixed(1)+" "+r[2]:"centuries or more",com=["123456","password","qwerty","letmein","admin","welcome","iloveyou","abc123","111111","summer2024","password1","dragon"].includes(s.toLowerCase()),pat=/^[a-z]{3,}\d{1,4}[^a-z0-9]{0,2}$/i.test(s);
+let o=`Length: ${s.length}  |  Character pool: ${c}  |  Entropy ≈ ${bits} bits\nOffline cracking (10 billion guesses/s, fast unsalted hash): ${com?"instantly (it is a very common password)":pat?"minutes to hours (word + number pattern, which rule-based attacks guess early)":t}\n`;
+if(com)o+="⚠ This is on common password lists.\n";if(pat&&!com)o+="⚠ Looks like a word + number (+ symbol). Attackers try these patterns first.\n";if(s.length<12)o+="⚠ Under 12 characters. Aim for 14+ or a random passphrase.\n";if(!/[^A-Za-z0-9]/.test(s)&&s.length<16)o+="Tip: length matters more than symbols.\n";
+return o+"\nEstimate assumes random characters. Words and patterns are weaker. Use a password manager and MFA."}
+function sample(){const l=[];for(let i=0;i<12;i++)l.push(`Oct  7 03:1${i%10}:0${i%10} srv sshd[812]: Failed password for ${i%3?"root":"admin"} from 10.10.10.66 port 4${i}00 ssh2`);
+l.push("Oct  7 03:14:20 srv sshd[820]: Accepted password for admin from 10.10.10.66 port 49000 ssh2","Oct  7 03:20:01 srv sshd[901]: Failed password for student from 10.10.10.10 port 51000 ssh2","Oct  7 03:21:15 srv sshd[905]: Accepted password for student from 10.10.10.10 port 51002 ssh2");return l.join("\n")}
+function analyse(t){const F={},A={},U={};t.split("\n").forEach(l=>{const m=l.match(/(Failed|Accepted) password for (?:invalid user )?(\S+) from (\d+\.\d+\.\d+\.\d+)/);if(!m)return;const ip=m[3];if(m[1]=="Failed"){F[ip]=(F[ip]||0)+1;(U[ip]=U[ip]||new Set()).add(m[2])}else A[ip]=(A[ip]||0)+1});
+const ips=[...new Set([...Object.keys(F),...Object.keys(A)])].sort((a,b)=>(F[b]||0)-(F[a]||0));if(!ips.length)return"No SSH login lines found. Paste auth.log lines or load the sample.";
+let o="IP address        Failed  Accepted  Accounts tried\n";ips.forEach(ip=>{o+=ip.padEnd(18)+String(F[ip]||0).padEnd(8)+String(A[ip]||0).padEnd(10)+[...(U[ip]||[])].join(",")+((F[ip]||0)>=5&&A[ip]?"   ⚠ SUCCESS AFTER MANY FAILURES: likely compromised":(F[ip]||0)>=5?"   ⚠ brute-force pattern":"")+"\n"});
+return o+"\nNext steps: block the source IP, reset affected passwords, check what the account did after login, enable key-only SSH and fail2ban."}
+const NH={"10.10.10.10":{n:"kali",p:[]},"10.10.10.20":{n:"ubuntu",os:"Linux 5.x",p:[[22,"ssh","OpenSSH 8.9"],[80,"http","Apache httpd 2.4.52"],[3000,"http","Node.js Express (Juice Shop)"]]},"10.10.10.30":{n:"windows",os:"Microsoft Windows 10",p:[[135,"msrpc","Microsoft Windows RPC"],[139,"netbios-ssn","netbios-ssn"],[445,"microsoft-ds","SMB"],[3389,"ms-wbt-server","Remote Desktop"]]}};
+const TOP=[21,22,23,25,53,80,110,135,139,143,443,445,3306,3389,8080];
+function nm(c){const a=c.trim().split(/\s+/);if(!c.trim())return"";if(a[0]!="nmap")return"This simulator only runs nmap. Type nmap for examples.";
+if(a.length==1||a.includes("-h"))return"Examples:\n nmap -sn 10.10.10.0/24   (find hosts)\n nmap 10.10.10.20         (top ports)\n nmap -sV 10.10.10.20     (versions)\n nmap -p- 10.10.10.20     (all ports)\n nmap -A 10.10.10.30      (versions + OS guess)";
+const fl=a.slice(1).filter(x=>x[0]=="-"),t=a.slice(1).filter(x=>x[0]!="-").pop()||"";
+if(fl.includes("-sn"))return t=="10.10.10.0/24"?"Host 10.10.10.10 is up\nHost 10.10.10.20 is up\nHost 10.10.10.30 is up\nNmap done: 256 IP addresses (3 hosts up)":"Only 10.10.10.0/24 exists in this lab.";
+const h=NH[t];if(!h)return"Note: host seems down. Try 10.10.10.20 or 10.10.10.30.";const full=fl.includes("-p-"),ver=fl.includes("-sV")||fl.includes("-A"),ps=h.p.filter(p=>full||TOP.includes(p[0]));
+let o=`Nmap scan report for ${t} (${h.n})\nPORT       STATE SERVICE`+(ver?"       VERSION":"")+"\n";ps.forEach(p=>o+=(p[0]+"/tcp").padEnd(11)+"open  "+(ver?p[1].padEnd(13)+p[2]:p[1])+"\n");
+if(!ps.length)o+="(no open ports found)\n";if(fl.includes("-A"))o+="OS guess: "+h.os+"\n";return o+(full?"All 65535 ports scanned.":"Only the top ports were scanned; unusual ports can be missed (try -p-).")}
+const PK=[["ARP","10.10.10.10","ff:ff:ff:ff:ff:ff","Who has 10.10.10.20? Tell 10.10.10.10","",0],["ARP","10.10.10.20","10.10.10.10","10.10.10.20 is at 08:00:27:aa:bb:cc","",0],["ICMP","10.10.10.10","10.10.10.20","Echo (ping) request","",0],["ICMP","10.10.10.20","10.10.10.10","Echo (ping) reply","",0],
+["DNS","10.10.10.10","10.10.10.1","Standard query A example.com","",53],["DNS","10.10.10.1","10.10.10.10","Response: example.com A 192.0.2.10","",53],["TCP","10.10.10.10","10.10.10.20","51514 → 80 [SYN]","S",80],["TCP","10.10.10.20","10.10.10.10","80 → 51514 [SYN, ACK]","SA",80],["TCP","10.10.10.10","10.10.10.20","51514 → 80 [ACK]","A",80],
+["HTTP","10.10.10.10","10.10.10.20","GET / HTTP/1.1","PA",80],["HTTP","10.10.10.20","10.10.10.10","HTTP/1.1 200 OK (text/html)","PA",80],["TCP","10.10.10.10","10.10.10.20","51514 → 80 [FIN, ACK]","FA",80],["TCP","10.10.10.66","10.10.10.20","40001 → 21 [SYN]","S",21],["TCP","10.10.10.20","10.10.10.66","21 → 40001 [RST, ACK]","RA",21],
+["TCP","10.10.10.66","10.10.10.20","40001 → 22 [SYN]","S",22],["TCP","10.10.10.20","10.10.10.66","22 → 40001 [SYN, ACK]","SA",22],["TCP","10.10.10.66","10.10.10.20","40001 → 22 [RST]","R",22]].map((p,i)=>({n:i+1,pr:p[0],s:p[1],d:p[2],i:p[3],f:p[4],pt:p[5]}));
+function pf(q){q=q.trim().toLowerCase();if(!q)return PK;const T=q.split("&&").map(x=>x.trim());return PK.filter(p=>T.every(t=>{let m;if(m=t.match(/^ip\.addr\s*==\s*(\S+)$/))return p.s==m[1]||p.d==m[1];if(m=t.match(/^tcp\.port\s*==\s*(\d+)$/))return["TCP","HTTP"].includes(p.pr)&&p.pt==+m[1];
+if(t=="tcp.flags.syn == 1"||t=="tcp.flags.syn==1")return p.f.includes("S");if(t=="tcp.flags.ack == 0"||t=="tcp.flags.ack==0")return["TCP","HTTP"].includes(p.pr)&&!p.f.includes("A");if(t=="tcp")return["TCP","HTTP"].includes(p.pr);return p.pr.toLowerCase()==t}))}
+
+</script>
+<script>
+function shell(el,pr,run,hint){el.innerHTML='<div class="o">'+hint+'\n</div><div class="l"><span>'+pr()+'</span><input aria-label="terminal" autocomplete="off" autocapitalize="off" spellcheck="false"></div>';
+const o=el.querySelector(".o"),i=el.querySelector("input"),sp=el.querySelector(".l span");
+i.onkeydown=e=>{if(e.key!="Enter")return;const c=i.value.trim();i.value="";if(c=="clear"||c=="cls"){o.textContent="";return}
+const p=pr(),r=run(c);o.textContent+=p+" "+c+"\n"+(r?r+"\n":"");sp.textContent=pr();o.scrollTop=o.scrollHeight}}
+const LF={"~":["docs/","logs/","notes.txt","flag.txt"],"~/docs":["secret.txt"],"~/logs":["auth.log"]},
+LC={"~/notes.txt":"Welcome, student! Try: ls -la, cd docs, cat flag.txt","~/flag.txt":"FLAG{first_steps_done}","~/.hidden_flag":"FLAG{hidden_files_found}","~/docs/secret.txt":"The hidden word is: lighthouse","~/logs/auth.log":"Failed password for root from 10.0.0.5\nAccepted password for student from 10.0.0.9\nFailed password for admin from 10.0.0.5\nFailed password for root from 10.0.0.5"};
+function lterm(el){let cwd="~";shell(el,()=>"student@lab:"+cwd+"$",c=>{
+const cat=f=>LC[cwd+"/"+f];
+if(c.includes("|")){const[l,r]=c.split("|").map(s=>s.trim().split(/\s+/));if(l[0]!="cat")return"Only 'cat file | ...' is supported here";const t=cat(l[1]);if(t==null)return"cat: "+l[1]+": No such file";
+if(r[0]=="grep")return t.split("\n").filter(x=>x.includes(r[1])).join("\n");if(r[0]=="wc")return""+t.split("\n").length;return r[0]+": unsupported"}
+const[m,...a]=c.split(/\s+/),f=a.filter(x=>x[0]!="-"),fl=a.join("");
+if(m=="help")return"help pwd ls [-la] cd cat grep echo man whoami clear  (try: cat file | grep word)";
+if(m=="pwd")return"/home/student"+cwd.slice(1);if(m=="whoami")return"student";if(m=="echo")return a.join(" ");
+if(m=="man")return f[0]?"MANUAL for "+f[0]+": flags change behaviour, e.g. ls -a shows hidden files.":"What manual page do you want?";
+if(m=="ls"){const n=LF[cwd].slice();if(fl.includes("a")&&cwd=="~")n.push(".hidden_flag");return fl.includes("l")?n.map(x=>(x.endsWith("/")?"drwxr-xr-x":"-rw-r--r--")+" student "+x).join("\n"):n.join("  ")}
+if(m=="cd"){const d=(f[0]||"").replace(/\/$/,"");if(!d||d=="~"||d=="..")cwd="~";else if(LF[cwd+"/"+d])cwd+="/"+d;else return"cd: no such directory: "+d;return""}
+if(m=="cat")return cat(f[0])??"cat: "+(f[0]||"")+": No such file";
+if(m=="grep"){const t=cat(f[1]);return t==null?"grep: "+(f[1]||"")+": No such file":t.split("\n").filter(x=>x.includes(f[0])).join("\n")}
+return c?m+": command not found (try help)":""},"Type help to begin.")}
+const WF={"~":["<DIR>  Documents","notes.txt","flag.txt"],"~/Documents":["report.txt","secret.txt"]},
+WC={"~/notes.txt":"Run tasklist and look for anything suspicious.","~/flag.txt":"FLAG{windows_cli_ok}","~/Documents/report.txt":"Quarterly report: nothing to see.","~/Documents/secret.txt":"Hint: the first PC you ever owned."};
+function wterm(el){let cwd="~";const pr=()=>"C:\\Users\\student"+cwd.slice(1).replace(/\//g,"\\")+">";shell(el,pr,c=>{
+const[m,...a]=c.split(/\s+/),x=(a[0]||"").replace(/\\$/,"");const l=m.toLowerCase();
+if(l=="help")return"help dir cd type whoami hostname ipconfig tasklist cls";
+if(l=="dir")return(WF[cwd]||[]).join("\n");
+if(l=="cd"){if(!x||x==".."||x=="\\")cwd="~";else if(WF[cwd+"/"+x])cwd+="/"+x;else return"The system cannot find the path specified.";return""}
+if(l=="type")return WC[cwd+"/"+a[0]]??"The system cannot find the file specified.";
+if(l=="whoami")return"lab\\student";if(l=="hostname")return"WIN-LAB01";
+if(l=="ipconfig")return"Windows IP Configuration\n  IPv4 Address. . . : 192.168.1.25\n  Default Gateway . : 192.168.1.1";
+if(l=="tasklist")return"Image Name        PID\nsvchost.exe       804\nchrome.exe        2210\nnotepad.exe       4120\nkeylogger.exe     6666";
+return c?"'"+m+"' is not recognized as a command (try help)":""},"Type help to begin.")}
+const DB={users:[{id:1,name:"alice",role:"admin",age:34},{id:2,name:"bob",role:"user",age:28},{id:3,name:"carol",role:"user",age:41},{id:4,name:"dave",role:"guest",age:19},{id:5,name:"erin",role:"admin",age:52}],flags:[{id:1,flag:"FLAG{sql_select_master}"}]};
+function sqlterm(el){shell(el,()=>"sql>",c=>{const m=c.match(/^select\s+(.+?)\s+from\s+(\w+)(?:\s+where\s+(\w+)\s*(=|>|<|!=)\s*'?([^']*?)'?)?\s*;?$/i);
+if(!m)return"Syntax: SELECT cols FROM table [WHERE col = 'value']. Tables: users, flags";
+const t=DB[m[2].toLowerCase()];if(!t)return"no such table: "+m[2];let rows=t;
+if(m[3]){const col=m[3].toLowerCase(),v=m[5];if(!(col in t[0]))return"no such column: "+m[3];rows=t.filter(r=>{const x=r[col],s=String(x).toLowerCase(),w=v.toLowerCase();return m[4]=="="?s==w:m[4]=="!="?s!=w:m[4]==">"?x>+v:x<+v})}
+if(/^count\(\*\)$/i.test(m[1]))return"count(*)\n"+rows.length;
+const cols=m[1]=="*"?Object.keys(t[0]):m[1].split(",").map(s=>s.trim().toLowerCase());
+if(cols.some(k=>!(k in t[0])))return"no such column in "+m[2];
+return cols.join(" | ")+"\n"+rows.map(r=>cols.map(k=>r[k]).join(" | ")).join("\n")+"\n("+rows.length+" rows)"},"Try: SELECT * FROM users")}
+
+const S=[...document.querySelectorAll("section")],T=document.getElementById("tabs"),$=i=>document.getElementById(i);
+S.forEach((s,i)=>{const b=document.createElement("button");b.textContent=s.dataset.n;b.onclick=()=>{S.forEach((x,j)=>x.classList.toggle("on",i==j));[...T.children].forEach((c,j)=>c.classList.toggle("on",i==j))};T.appendChild(b)});T.children[0].click();
+const mt=()=>({l:lterm,w:wterm,s:sqlterm})[$("ts").value]($("tm"));$("ts").onchange=mt;mt();
+$("si").oninput=()=>$("so").textContent=sub($("si").value);$("so").textContent=sub($("si").value);
+[["Base64 encode","b64e"],["Base64 decode","b64d"],["URL encode","ue"],["URL decode","ud"],["Hex encode","hxe"],["Hex decode","hxd"],["ROT13","r13"]].forEach(([t,k])=>{const b=document.createElement("button");b.className="b";b.textContent=t;b.onclick=()=>{try{$("eo").value=E[k]($("ei").value)}catch(e){$("eo").value="Invalid input for this operation."}};$("eb").appendChild(b)});
+async function hs(){const t=new TextEncoder().encode($("hi").value);let o="";for(const a of["SHA-1","SHA-256","SHA-512"]){const d=await crypto.subtle.digest(a,t);o+=a+"\n"+[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,"0")).join("")+"\n\n"}$("ho").textContent=o+"MD5 is not offered by browsers and is unsafe for passwords anyway."}
+$("hi").oninput=hs;hs();
+const cv=()=>$("co").textContent=conv($("ci").value,+$("cb").value);$("ci").oninput=cv;$("cb").onchange=cv;cv();
+const pwu=()=>$("po").textContent=pw($("pi").value);$("pi").oninput=pwu;pwu();
+$("ls").onclick=()=>{$("li").value=sample();$("lo").textContent=analyse($("li").value)};$("la").onclick=()=>$("lo").textContent=analyse($("li").value);
+shell($("nt"),()=>"kali@lab:~$",nm,"Simulated Nmap. Type nmap for examples.");
+function pr(){$("pt").innerHTML=pf($("pfi").value).map(p=>`<tr class="p" data-n="${p.n}"><td>${p.n}</td><td>${p.s}</td><td>${p.d}</td><td>${p.pr}</td><td>${p.i}</td></tr>`).join("")||"<tr><td colspan=5>No packets match.</td></tr>";
+document.querySelectorAll("tr.p").forEach(r=>r.onclick=()=>{const p=PK[r.dataset.n-1];$("pd").textContent=`Frame ${p.n}\nProtocol: ${p.pr}\nSource: ${p.s}\nDestination: ${p.d}\nInfo: ${p.i}`+(p.f?`\nTCP flags: ${p.f}`:"")})}
+$("pfi").oninput=pr;pr();
+</script></body></html>

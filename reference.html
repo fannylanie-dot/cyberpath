@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reference & Careers</title>
+<style>
+:root{--bg:#f1f4f8;--card:#fff;--tx:#1b2430;--mu:#5d6b7a;--bd:#d3dbe5;--ac:#1fa84f;--ac2:#e3f6ea;--code:#eef1f4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b111b;--card:#1a2436;--tx:#e8eef6;--mu:#93a1b3;--bd:#27344a;--ac:#8de64a;--ac2:#18301b;--code:#0c121c}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:900px;margin:0 auto;padding:12px 16px 40px}h1{margin:6px 0}h2{margin:0 0 8px}h3{margin:14px 0 4px;color:var(--ac)}
+.tabs{position:sticky;top:0;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 0;z-index:2}
+.tabs button{flex:none;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:20px;padding:6px 14px;font:inherit;cursor:pointer}.tabs button.on{border-color:var(--ac);background:var(--ac2)}
+section{display:none;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px}section.on{display:block}
+code,pre{background:var(--code);border-radius:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.86em}code{padding:1px 5px}pre{padding:10px;overflow-x:auto}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%}td,th{border:1px solid var(--bd);padding:5px 9px;text-align:left;vertical-align:top}
+input{width:100%;background:var(--code);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font:inherit;margin-bottom:8px}
+ul{padding-left:20px;margin:4px 0}.g dt{font-weight:700;margin-top:8px}.g dd{margin:0 0 0 0;color:var(--mu)}
+.tip{border-left:4px solid var(--ac);background:var(--ac2);padding:8px 12px;border-radius:6px;margin:10px 0}
+</style></head><body><div class="w"><h1>📖 Reference &amp; Careers</h1>
+<div class="tabs" id="tabs"></div>
+
+<section id="careers" data-n="Career paths"><h2>Specialisation paths</h2>
+<p>Everyone starts with the same foundation (networking, Linux, Windows, scripting, Security+). Then pick a direction. You can change later.</p>
+<div class="tw"><table><tr><th>Path</th><th>What you do</th><th>Key skills and tools</th><th>Typical certs</th></tr>
+<tr><td><b>SOC analyst</b></td><td>Monitor, triage and investigate alerts</td><td>Logs, SIEM (Wazuh, Splunk, Elastic), EDR, MITRE ATT&amp;CK</td><td>Security+, CySA+</td></tr>
+<tr><td><b>Penetration tester</b></td><td>Authorised attacks and reports</td><td>Web, Active Directory, Linux privesc, Nmap, Burp, reporting</td><td>eJPT, PNPT, OSCP</td></tr>
+<tr><td><b>Cloud security</b></td><td>Secure AWS/Azure/GCP</td><td>IAM, logging, misconfigurations, IaC, containers</td><td>Cloud-vendor security certs, CCSP (later)</td></tr>
+<tr><td><b>DFIR</b></td><td>Forensics and incident response</td><td>Disk/memory/network forensics, timelines, Autopsy, Volatility</td><td>GCFE/GCFA, others</td></tr>
+<tr><td><b>AppSec / security engineer</b></td><td>Secure code, tooling, pipelines</td><td>Programming, code review, SAST/DAST, OWASP</td><td>Experience-based; vendor certs</td></tr>
+<tr><td><b>GRC / auditor</b></td><td>Policy, risk, compliance</td><td>NIST CSF, ISO 27001, SOC 2, GDPR, risk registers</td><td>Security+, ISO 27001 LA, CISA, CISM (experience needed)</td></tr></table></div>
+<div class="tip">Easiest first jobs: IT support, help desk, junior SOC analyst, IT audit. Offensive roles usually come after 1–3 years of experience.</div>
+<h3>Skill map: what a specialist should know</h3>
+<ul><li><b>Foundations:</b> networking, Linux, Windows, one scripting language, cryptography basics</li><li><b>Defence:</b> logging, SIEM, EDR, hardening, vulnerability management, incident response</li><li><b>Offence:</b> recon, web and network testing, Active Directory, privilege escalation, reporting</li><li><b>Modern infrastructure:</b> cloud IAM, containers, infrastructure as code, identity</li><li><b>Governance:</b> risk, frameworks, compliance, business continuity</li><li><b>Professional:</b> clear writing, explaining risk to non-experts, ethics and law, constant learning</li></ul></section>
+
+<section id="next" data-n="Learn next"><h2>Topics to study after the roadmap</h2>
+<h3>Active Directory (Windows networks)</h3><p>AD stores users, computers and policies for a company. Learn domains, Kerberos, NTLM, groups and Group Policy. Common attacks: password spraying, Kerberoasting, abuse of over-privileged accounts. Defences: tiered admin accounts, long service-account passwords, monitoring logon events (4624/4625, Kerberos 4768/4769). Build a free AD lab with Windows Server evaluation plus a Windows client.</p>
+<h3>Cloud security</h3><p>Shared responsibility, IAM least privilege, MFA on root/admin, no public storage, central logging (e.g. CloudTrail/Activity Logs), key management. Practise with a free-tier account and deliberately vulnerable cloud labs.</p>
+<h3>Malware analysis basics</h3><p>Always inside an isolated VM with a snapshot. Static: hashes, <code>strings</code>, file type, imports. Dynamic: run in a sandbox and watch processes, files, registry and network. Report indicators of compromise.</p>
+<h3>Digital forensics</h3><p>Order of volatility (RAM first, disk later), forensic imaging, hashing to prove integrity, chain of custody, building a timeline from logs and file times.</p>
+<h3>Containers and DevSecOps</h3><p>Docker images, running as non-root, no secrets in images, scanning dependencies and images, scanning code in CI pipelines.</p>
+<h3>Frameworks</h3><p><b>NIST CSF</b> (Govern, Identify, Protect, Detect, Respond, Recover), <b>CIS Controls</b> (prioritised safeguards), <b>ISO 27001</b> (management system), <b>OWASP Top 10</b> (web risks), <b>MITRE ATT&amp;CK</b> (attacker behaviour).</p>
+<h3>Habits that make you better</h3><ul><li>One lab or write-up per week, even small ones</li><li>Read one security news item daily and explain it in two sentences</li><li>Re-do old labs without notes to test real recall</li></ul></section>
+
+<section id="cheats" data-n="Cheat sheets"><h2>Cheat sheets</h2>
+<h3>Linux</h3><pre>ls -la  cd  pwd  cat  less  head  tail -f  find / -name x 2&gt;/dev/null
+grep -rni "text" dir   sort | uniq -c | sort -nr   awk '{print $1}'
+chmod 640 f  chown u:g f  id  sudo -l  ps aux  ss -tulpn  ip a  ip route
+systemctl status|start|stop x   journalctl -u x   crontab -l</pre>
+<h3>Nmap</h3><pre>nmap -sn net/24   nmap -sV -sC host   nmap -p- host   nmap -sU --top-ports 20 host
+nmap -A -oN out.txt host   nmap --script vuln host (own lab only)</pre>
+<h3>Wireshark display filters</h3><pre>dns   http   icmp   tcp.port == 443   ip.addr == x.x.x.x
+tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0   frame contains "password"</pre>
+<h3>Windows (PowerShell)</h3><pre>Get-Process  Get-Service  Get-LocalUser  Get-NetTCPConnection -State Listen
+Get-WinEvent -FilterHashtable @{LogName='Security';Id=4625} -MaxEvents 10
+ipconfig /all  netstat -ano  tasklist  whoami /all</pre>
+<div class="tw"><table><tr><th>Event ID</th><th>Meaning</th><th>Event ID</th><th>Meaning</th></tr><tr><td>4624</td><td>Logon success</td><td>4720</td><td>Account created</td></tr><tr><td>4625</td><td>Logon failed</td><td>4732</td><td>Added to local group</td></tr><tr><td>4688</td><td>Process created</td><td>1102</td><td>Audit log cleared</td></tr></table></div>
+<h3>Common ports</h3><p>21 FTP · 22 SSH · 23 Telnet · 25 SMTP · 53 DNS · 80 HTTP · 88 Kerberos · 110 POP3 · 135/139/445 SMB/RPC · 143 IMAP · 389 LDAP · 443 HTTPS · 1433 MSSQL · 3306 MySQL · 3389 RDP</p>
+<h3>HTTP status</h3><p>200 OK · 301/302 redirect · 401 unauthenticated · 403 forbidden · 404 not found · 500 server error</p></section>
+
+<section id="gloss" data-n="Glossary"><h2>Glossary</h2><input id="q" placeholder="Search terms…" aria-label="Search glossary"><dl class="g" id="gl"></dl></section>
+
+<section id="links" data-n="Free resources"><h2>Free resource directory</h2>
+<p>Free tiers and offers change, so check each site's current terms.</p>
+<ul><li><b>Networking:</b> Cisco Networking Academy (netacad.com), Professor Messer (professormesser.com), Wireshark docs</li><li><b>Linux/Windows:</b> Linux Journey (linuxjourney.com), OverTheWire Bandit (overthewire.org), Microsoft Learn (learn.microsoft.com)</li><li><b>Programming:</b> Automate the Boring Stuff (automatetheboringstuff.com), CS50P, SQLBolt (sqlbolt.com)</li><li><b>Defender practice:</b> CyberDefenders, LetsDefend (free tier), Wazuh docs, MITRE ATT&amp;CK (attack.mitre.org), Security Onion</li><li><b>Hacker practice:</b> PortSwigger Web Security Academy, picoCTF, OWASP Juice Shop, Hack The Box Academy and TryHackMe free rooms, GTFOBins (gtfobins.github.io)</li><li><b>Cloud:</b> free-tier accounts with AWS, Azure, GCP; flaws.cloud</li><li><b>Standards:</b> OWASP (owasp.org), NIST Cybersecurity Framework, CIS Controls, CompTIA exam objectives (free PDFs)</li><li><b>Community:</b> ctftime.org for CTF events, local security meetups, open-source security tools on GitHub</li></ul></section>
+</div>
+<script>
+const G=[["Attack surface","All the ways an attacker could get in"],["Authentication","Proving who you are"],["Authorisation","What you are allowed to do once identified"],["Botnet","Many infected machines controlled together"],["Brute force","Trying many passwords or keys until one works"],["C2 (command and control)","Channel malware uses to receive orders"],["CIA triad","Confidentiality, integrity, availability"],["CVE","Public ID for a known vulnerability"],["CVSS","Score (0-10) rating vulnerability severity"],["DDoS","Flooding a service from many sources to knock it offline"],["DMZ","Network zone for public-facing servers, separated from the LAN"],["EDR","Endpoint tool that detects and responds to threats on devices"],["Exploit","Code or method that abuses a vulnerability"],["Firewall","Filters traffic by rules"],["Hash","One-way fingerprint of data"],["Honeypot","Decoy system that attracts attackers"],["IAM","Managing identities and their access"],["IDS / IPS","System that detects (IDS) or also blocks (IPS) attacks"],["IOC","Evidence of compromise: IP, domain, hash"],["Incident response","Process for handling a security incident"],["Lateral movement","Attacker moving from one machine to others"],["Least privilege","Give only the access needed"],["Malware","Malicious software"],["MFA","Login needing more than one proof"],["MITM / on-path","Attacker secretly sits between two parties"],["NAT","Lets many private IPs share one public IP"],["Patch","Update that fixes a vulnerability"],["Penetration test","Authorised simulated attack"],["Phishing","Fake messages that trick people"],["PKI","System of certificates and authorities"],["Privilege escalation","Gaining higher access than intended"],["RBAC","Access based on job role"],["Ransomware","Malware that encrypts data for payment"],["Red / blue / purple team","Attackers / defenders / both working together"],["Risk","Likelihood times impact of a threat"],["Salt","Random data added before hashing"],["Sandbox","Isolated place to run suspicious files safely"],["SIEM","Collects and correlates logs, raises alerts"],["SOC","Team monitoring and responding to threats"],["Social engineering","Manipulating people to bypass security"],["SQL injection","Input that changes a database query"],["Threat","Anything that could cause harm"],["TLS","Protocol that encrypts web traffic"],["Vulnerability","A weakness that can be abused"],["VPN","Encrypted tunnel over an untrusted network"],["XSS","Attacker script running in a victim's browser"],["Zero-day","Flaw with no patch available yet"],["Zero trust","Verify every request; trust no location"]];
+const S=[...document.querySelectorAll("section")],T=document.getElementById("tabs");
+S.forEach((s,i)=>{const b=document.createElement("button");b.textContent=s.dataset.n;b.onclick=()=>{S.forEach((x,j)=>x.classList.toggle("on",i==j));[...T.children].forEach((c,j)=>c.classList.toggle("on",i==j))};T.appendChild(b)});
+T.children[0].click();
+const gl=document.getElementById("gl"),q=document.getElementById("q");
+function f(){const v=q.value.toLowerCase();gl.innerHTML=G.filter(g=>(g[0]+g[1]).toLowerCase().includes(v)).map(g=>`<dt>${g[0]}</dt><dd>${g[1]}</dd>`).join("")||"<dd>No match</dd>"}
+q.oninput=f;f();
+</script></body></html>

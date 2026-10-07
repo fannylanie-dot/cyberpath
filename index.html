@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b111b"><link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><title>CyberPath</title>
+<style>
+:root{--bg:#f1f4f8;--card:#fff;--tx:#1b2430;--mu:#5d6b7a;--bd:#d3dbe5;--ac:#1fa84f;--ac2:#e3f6ea}
+@media (prefers-color-scheme:dark){:root{--bg:#0b111b;--card:#1a2436;--tx:#e8eef6;--mu:#93a1b3;--bd:#27344a;--ac:#8de64a;--ac2:#18301b}}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#v{flex:1;min-height:0;position:relative}#v>*{position:absolute;inset:0;width:100%;height:100%;border:0;display:none}#v>.on{display:block}
+#home{overflow:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px 16px}.in{max-width:760px;margin:0 auto}
+h1{margin:0}.sub{color:var(--mu)}.c{display:block;width:100%;text-align:left;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin:10px 0;font:inherit;cursor:pointer}
+.c b{display:block}.c span{color:var(--mu);font-size:.92rem}.c:hover{border-color:var(--ac)}
+#ins{background:var(--ac);color:#04200d;border:0;border-radius:8px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer;display:none;margin:10px 0}
+.tip{border-left:4px solid var(--ac);background:var(--ac2);padding:8px 12px;border-radius:6px;margin:12px 0}
+nav{display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;background:none;border:0;color:var(--mu);padding:8px 2px;font:inherit;font-size:.72rem;cursor:pointer}nav button i{display:block;font-style:normal;font-size:1.3rem}nav button.on{color:var(--ac);font-weight:700}
+</style></head><body>
+<div id="v"><div id="home" class="on"><div class="in">
+<h1>🛡️ CyberPath</h1><p class="sub">Learn cybersecurity from zero to job-ready. Works offline once installed.</p>
+<button id="ins">⬇ Install app</button>
+<button class="c" data-k="course"><b>🎓 Course</b><span>30 TryHackMe-style rooms with quizzes and practice terminals (Linux, Windows, SQL)</span></button>
+<button class="c" data-k="library"><b>📚 Study Library</b><span>34 lessons with labs: lab setup, networking, Linux, Windows, Python, Security+, defender, hacker, jobs</span></button>
+<button class="c" data-k="tools"><b>🧰 Practice Tools</b><span>Linux, Windows and SQL terminals, Nmap and packet simulators, log analyser, subnet calculator, encoder, hash and password tools</span></button>
+<button class="c" data-k="checklist"><b>✅ Roadmap Checklist</b><span>Step-by-step plan with free resources, checkpoints and projects</span></button>
+<button class="c" data-k="reference"><b>📖 Reference &amp; Careers</b><span>Career paths, what to learn next, cheat sheets, glossary, free resources</span></button>
+<div class="tip"><b>Suggested order:</b> Course (concepts) → Library Phase 0 (build your lab) → Library Phases 1–4 + Tools for practice → Defender and Hacker labs → Checklist to track → Library Phase 6 to get hired.</div>
+<p class="sub">Your progress is saved on this device only. Practise attacks only on your own lab machines.</p>
+<p class="sub" id="hint"></p></div></div></div>
+<nav id="nav"></nav>
+<script>
+const P={home:["🏠","Home"],course:["🎓","Course"],library:["📚","Library"],tools:["🧰","Tools"],checklist:["✅","Checklist"],reference:["📖","Reference"]};
+const v=document.getElementById("v"),nv=document.getElementById("nav");
+Object.entries(P).forEach(([k,[i,t]])=>{const b=document.createElement("button");b.dataset.k=k;b.innerHTML=`<i>${i}</i>${t}`;nv.appendChild(b)});
+function go(k){if(!P[k])k="home";if(k!="home"&&!document.getElementById("f_"+k)){const f=document.createElement("iframe");f.id="f_"+k;f.title=P[k][1];f.src=k+".html";v.appendChild(f)}
+[...v.children].forEach(c=>c.classList.toggle("on",c.id==(k=="home"?"home":"f_"+k)));
+[...nv.children].forEach(b=>b.classList.toggle("on",b.dataset.k==k));try{localStorage.setItem("cp_tab",k)}catch(e){}}
+document.querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>go(b.dataset.k));
+let last="home";try{last=localStorage.getItem("cp_tab")||"home"}catch(e){}go(last);
+let dp;addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;ins.style.display="inline-block"});
+ins.onclick=async()=>{if(dp){dp.prompt();dp=null;ins.style.display="none"}};
+addEventListener("appinstalled",()=>{ins.style.display="none"});
+if(!matchMedia("(display-mode: standalone)").matches)hint.textContent="To install: Android Chrome menu → Install app. PC Chrome/Edge: install icon in the address bar.";
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script></body></html>

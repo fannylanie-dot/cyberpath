@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cyber Study Library</title>
+<style>
+:root{--bg:#f1f4f8;--card:#fff;--tx:#1b2430;--mu:#5d6b7a;--bd:#d3dbe5;--ac:#1fa84f;--ac2:#e3f6ea;--code:#eef1f4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b111b;--card:#1a2436;--tx:#e8eef6;--mu:#93a1b3;--bd:#27344a;--ac:#8de64a;--ac2:#18301b;--code:#0c121c}}
+:root[data-theme="dark"]{--bg:#0b111b;--card:#1a2436;--tx:#e8eef6;--mu:#93a1b3;--bd:#27344a;--ac:#8de64a;--ac2:#18301b;--code:#0c121c}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1000px;margin:0 auto;padding:16px}h1{margin:0;font-size:1.6rem}.sub{color:var(--mu);margin:2px 0 12px}
+.g{display:grid;grid-template-columns:240px 1fr;gap:16px}@media(max-width:760px){.g{grid-template-columns:1fr}}
+nav{display:flex;flex-direction:column;gap:6px}
+nav b{color:var(--mu);font-size:.8rem;letter-spacing:.06em;margin-top:8px}
+nav button{text-align:left;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:10px;padding:8px 10px;font:inherit;cursor:pointer}
+nav button.on{border-color:var(--ac);background:var(--ac2)}
+article{display:none;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:18px;min-width:0}article.on{display:block}
+h2{margin:0 0 8px}h3{margin:16px 0 4px;color:var(--ac)}
+code,pre{background:var(--code);border-radius:6px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88em}code{padding:1px 5px}pre{padding:10px;overflow-x:auto}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%}td,th{border:1px solid var(--bd);padding:5px 9px;text-align:left}
+.tip{border-left:4px solid var(--ac);background:var(--ac2);padding:8px 12px;border-radius:6px;margin:10px 0}
+details{background:var(--code);border-radius:8px;padding:8px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+.done{display:flex;gap:8px;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--bd)}.done input{width:20px;height:20px;accent-color:var(--ac)}
+.nb{display:flex;justify-content:space-between;margin-top:12px}.nb button{background:var(--ac);color:#04200d;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer}
+</style></head><body><div class="w">
+<h1>📚 Cyber Study Library</h1>
+<p class="sub">Original study notes, labs and self-checks. Do every lab in your own VM or computer. <span id="pr"></span></p>
+<div class="g"><nav id="nav"></nav><div id="main"></div></div></div>
+
+<article data-p="Phase 0: Lab setup" data-t="0.1 Lab plan & safety rules"><h2>Lab plan and safety rules</h2>
+<p>A home lab is a set of virtual machines (VMs) on your own computer where you can practise attacks and defences without harming anything real.</p>
+<h3>What you need</h3><ul><li><b>RAM:</b> 8 GB works for two VMs at a time; 16 GB is comfortable.</li><li><b>Disk:</b> about 100 GB free (SSD preferred).</li><li><b>CPU:</b> virtualisation must be on (Intel VT-x / AMD-V, set in BIOS/UEFI).</li></ul>
+<h3>Target setup</h3>
+<div class="tw"><table><tr><th>VM</th><th>Role</th><th>Suggested RAM</th></tr><tr><td>Kali Linux</td><td>Attacker toolbox</td><td>4 GB, 2 CPUs</td></tr><tr><td>Ubuntu</td><td>Linux target, log source, Wazuh later</td><td>2–4 GB</td></tr><tr><td>Windows evaluation</td><td>Windows target, event logs</td><td>4 GB</td></tr><tr><td>Vulnerable apps</td><td>Juice Shop, DVWA</td><td>small (containers)</td></tr></table></div>
+<p>Do not run everything at once. Start the attacker plus one target.</p>
+<h3>Safety rules</h3><ol><li>Attack <b>only</b> your own VMs or platforms made for practice.</li><li>Keep vulnerable machines on a host-only or internal network, never directly on the internet.</li><li>Take a <b>snapshot</b> before every experiment so you can roll back.</li><li>Never open suspicious files on your real (host) operating system.</li><li>Do not test your school, work or home router, or anyone else's network without written permission.</li></ol>
+<h3>Check yourself</h3><details><summary>Why snapshots?</summary>They let you undo mistakes and return to a clean state in seconds.</details></article>
+
+<article data-p="Phase 0: Lab setup" data-t="0.2 Install VirtualBox"><h2>Install VirtualBox and enable virtualisation</h2>
+<h3>Step 1: check virtualisation</h3><p>On Windows open Task Manager → Performance → CPU and look for "Virtualization: Enabled". If it says Disabled, restart into BIOS/UEFI (usually F2, F10, Del or Esc at boot) and enable <b>Intel VT-x</b>, <b>AMD-V</b> or <b>SVM Mode</b>.</p>
+<h3>Step 2: install</h3><ol><li>Download VirtualBox from the official site (virtualbox.org) and install with default options.</li><li>Reboot if asked.</li><li>Optionally install the matching Extension Pack from the same site for USB support.</li></ol>
+<h3>Common problems</h3><ul><li><b>VM won't start / "VT-x not available":</b> virtualisation is off in BIOS, or another hypervisor (Hyper-V, WSL2, Windows Sandbox) is taking control. Disable those Windows features or use the VirtualBox version that supports them (slower).</li><li><b>Very slow VM:</b> give it 2 CPUs and enough RAM, turn on 3D off, and store disks on an SSD.</li><li><b>Screen too small:</b> install Guest Additions inside the VM.</li></ul>
+<h3>Checkpoint</h3><p>VirtualBox opens and shows an empty VM list. Note your host's RAM so you can budget VMs.</p></article>
+
+<article data-p="Phase 0: Lab setup" data-t="0.3 Build the Kali VM"><h2>Build the Kali Linux VM</h2>
+<p>Kali is a Linux distribution that ships with security tools. Get it only from the official Kali website (kali.org → Get Kali).</p>
+<h3>Option A: pre-built VirtualBox image (easiest)</h3><ol><li>Download the VirtualBox image.</li><li><b>Verify the checksum</b> against the value on the download page (this is the hashing lesson in practice):<pre>sha256sum kali-*.7z            # Linux / macOS
+Get-FileHash .\kali-*.7z -Algorithm SHA256   # Windows PowerShell</pre></li><li>Extract it, then in VirtualBox use File → Import Appliance (or Add for a .vbox file).</li><li>Settings: 2+ CPUs, 4 GB RAM, Network adapter 1 = NAT.</li></ol>
+<h3>Option B: installer ISO</h3><p>Create a new VM (Linux, Debian 64-bit), 4 GB RAM, 40 GB disk, attach the ISO and follow the installer.</p>
+<h3>First boot</h3><ol><li>The download page lists the default login for the image. Change the password right away with <code>passwd</code>.</li><li>Update everything:<pre>sudo apt update &amp;&amp; sudo apt full-upgrade -y</pre></li><li>Install Guest Additions or use the clipboard/resize features if offered.</li><li>Shut down and take a snapshot named <b>clean-install</b>.</li></ol>
+<h3>Check yourself</h3><details><summary>Why verify a checksum?</summary>It proves the file was not corrupted or tampered with, which matters most for security tools.</details></article>
+
+<article data-p="Phase 0: Lab setup" data-t="0.4 Build the target VMs"><h2>Build the target machines</h2>
+<h3>Ubuntu (Linux target and log source)</h3><ol><li>Download Ubuntu from ubuntu.com (Desktop or Server LTS) and create a VM with 2–4 GB RAM and 25 GB disk.</li><li>Install it, then enable SSH:<pre>sudo apt update
+sudo apt install openssh-server -y
+sudo systemctl status ssh</pre></li><li>Snapshot: <b>clean-install</b>.</li></ol>
+<h3>Windows (Windows target and event logs)</h3><p>Microsoft publishes time-limited evaluation versions of Windows through its Evaluation Center. Download one, create a VM with 4 GB RAM and 50 GB disk, install, and snapshot. Availability and terms change, so check the current page. Evaluation copies are for testing, not daily use.</p>
+<h3>Intentionally vulnerable apps (for hacker practice)</h3><p>Run these only on your lab network. If you have Docker on the Ubuntu VM:</p>
+<pre>sudo apt install docker.io -y
+sudo docker run --rm -p 3000:3000 bkimminich/juice-shop</pre>
+<p>Then browse to <code>http://&lt;ubuntu-ip&gt;:3000</code> from Kali. Juice Shop is OWASP's deliberately insecure web shop. DVWA is another popular one, and Metasploitable is a deliberately vulnerable VM (host-only network only).</p>
+<h3>Checkpoint</h3><p>You have Kali, Ubuntu and Windows VMs, each with a <b>clean-install</b> snapshot.</p></article>
+
+<article data-p="Phase 0: Lab setup" data-t="0.5 Lab networking & snapshots"><h2>Lab networking and snapshots</h2>
+<div class="tw"><table><tr><th>Mode</th><th>VM can reach internet?</th><th>VMs reach each other?</th><th>Use</th></tr><tr><td>NAT</td><td>Yes</td><td>No</td><td>Updates, downloads</td></tr><tr><td>Host-only</td><td>No</td><td>Yes (and host)</td><td>Attack lab</td></tr><tr><td>Internal network</td><td>No</td><td>Yes (VMs only)</td><td>Most isolated lab</td></tr><tr><td>Bridged</td><td>Yes</td><td>On your real LAN</td><td>Avoid for vulnerable targets</td></tr></table></div>
+<h3>Recommended layout</h3><ul><li><b>Kali:</b> adapter 1 = NAT (updates), adapter 2 = Internal network named <code>labnet</code>.</li><li><b>Targets (Ubuntu, Windows, vulnerable apps):</b> adapter 1 = Internal network <code>labnet</code> only.</li></ul>
+<p>Set manual IPs on the internal network, for example <code>10.10.10.10/24</code> (Kali), <code>.20</code> (Ubuntu), <code>.30</code> (Windows):</p>
+<pre>sudo ip addr add 10.10.10.10/24 dev eth1   # temporary, Linux
+ip a                                       # verify
+ping -c 3 10.10.10.20</pre>
+<p>If ping to Windows fails, the Windows firewall is probably blocking ICMP. Allow it in the firewall rules for your lab, or test with another service.</p>
+<p>If the target needs internet briefly (for installs), switch it to NAT, install, then move it back to the internal network.</p>
+<h3>Snapshot routine</h3><ol><li>Snapshot <b>before</b> every attack or risky change.</li><li>Name snapshots clearly: <code>clean-install</code>, <code>wazuh-installed</code>, <code>before-bruteforce</code>.</li><li>Restore after the exercise.</li></ol>
+<h3>Check yourself</h3><details><summary>Which network mode keeps a vulnerable VM away from the internet while letting it talk to Kali?</summary>Internal network (or host-only).</details></article>
+
+<article data-p="Phase 0: Lab setup" data-t="0.6 GitHub & note-taking"><h2>GitHub and note-taking</h2>
+<p>Your notes and write-ups become the portfolio that shows employers you can do the work.</p>
+<h3>Git in five commands</h3>
+<pre>git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git init security-labs
+cd security-labs
+echo "# Security Labs" &gt; README.md
+git add . &amp;&amp; git commit -m "first commit"
+# create an empty repo on github.com, then:
+git remote add origin &lt;your-repo-url&gt;
+git push -u origin main</pre>
+<h3>Write-up template (copy for every lab)</h3>
+<pre># Title
+**Goal:**   what you wanted to learn or achieve
+**Environment:** VMs, tools, versions
+**Steps:**  commands and what each did
+**Evidence:** screenshots or logs
+**Detection:** how this looks in logs (defender view)
+**Fix:**    how to prevent it
+**Lessons:** what you would do differently</pre>
+<h3>What not to publish</h3><ul><li>Real passwords, API keys, or other people's IP addresses and data</li><li>Solutions to active competitions or answers a platform asks users not to share</li><li>Anything about systems you were not authorised to test</li></ul>
+<h3>Tools</h3><p>Use Markdown for notes (Obsidian or any editor). Keep one folder per phase and commit regularly.</p>
+<div class="tip"><b>Phase 0 checkpoint:</b> (1) Kali, Ubuntu and Windows VMs with <code>clean-install</code> snapshots, (2) Kali can ping the Ubuntu VM on <code>labnet</code>, (3) a GitHub repo with your first README and one test write-up.</div></article>
+
+<article data-p="Phase 1: Networking" data-t="1. IP addressing & subnets"><h2>IP addressing and subnets</h2>
+<p>An IPv4 address is 32 bits written as four octets (<code>192.168.1.130</code>). A <b>subnet mask</b> says which bits identify the network and which identify the host. <b>CIDR</b> writes the mask as a prefix: <code>/24</code> = first 24 bits are network = <code>255.255.255.0</code>.</p>
+<h3>Counting hosts</h3><p>Usable hosts = 2<sup>(32 − prefix)</sup> − 2 (the first address is the network ID, the last is broadcast).</p>
+<div class="tw"><table><tr><th>Prefix</th><th>Mask</th><th>Usable hosts</th></tr><tr><td>/24</td><td>255.255.255.0</td><td>254</td></tr><tr><td>/25</td><td>255.255.255.128</td><td>126</td></tr><tr><td>/26</td><td>255.255.255.192</td><td>62</td></tr><tr><td>/30</td><td>255.255.255.252</td><td>2</td></tr></table></div>
+<p><b>Worked example:</b> <code>192.168.1.130/25</code>. Block size is 128, so the network is <code>192.168.1.128</code>, broadcast <code>192.168.1.255</code>, usable range <code>.129–.254</code>.</p>
+<h3>Special ranges</h3><ul><li>Private: <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code> (not routed on the internet)</li><li><code>127.0.0.1</code> loopback; <code>169.254.x.x</code> means DHCP failed</li><li>The <b>default gateway</b> is the router on your subnet that leads elsewhere</li></ul>
+<h3>Lab</h3><pre>ip a            # Linux: your IP and mask
+ip route        # default gateway
+ipconfig /all   # Windows equivalent</pre><p>Write down your IP, prefix, gateway and DNS server, and work out your network address and broadcast by hand.</p>
+<h3>Check yourself</h3><details><summary>How many usable hosts in a /27?</summary>2^5 − 2 = 30.</details><details><summary>Are 192.168.1.10/24 and 192.168.2.10/24 on the same network?</summary>No. The third octet differs, so a router is needed between them.</details></article>
+
+<article data-p="Phase 1: Networking" data-t="2. Ethernet, MAC & ARP"><h2>Ethernet, MAC addresses and ARP</h2>
+<p>A <b>MAC address</b> is a 48-bit hardware ID (<code>a4:5e:60:11:22:33</code>); the first half identifies the vendor. A <b>switch</b> learns which MAC is on which port and forwards frames only there. A hub repeats everything to everyone.</p>
+<h3>ARP</h3><p>IP gets a packet to the right network; MAC delivers it on the local link. <b>ARP</b> asks everyone "who has 192.168.1.1?" and the owner replies with its MAC. Results are cached.</p>
+<ul><li>Destination in your subnet: ARP for the destination.</li><li>Destination elsewhere: ARP for the <b>gateway</b> and send it there.</li></ul>
+<div class="tip"><b>Security:</b> ARP has no authentication. In <b>ARP spoofing</b> an attacker sends false replies to sit between victim and gateway (man-in-the-middle). Defences: dynamic ARP inspection, port security, encrypted protocols.</div>
+<h3>Lab</h3><pre>ping -c 3 192.168.1.1   # your gateway
+ip neigh                # Linux ARP cache
+arp -a                  # Windows / macOS</pre><p>Find the MAC of your gateway. Then look up its vendor from the first 3 bytes.</p>
+<h3>Check yourself</h3><details><summary>Why does your PC ARP for the gateway when you open a website?</summary>The website is outside your subnet, so the frame must go to the gateway's MAC.</details></article>
+
+<article data-p="Phase 1: Networking" data-t="3. TCP, UDP & ports"><h2>TCP, UDP and ports</h2>
+<p>Ports (0–65535) tell the OS which program gets the data. Servers listen on well-known ports; clients use a random high port. A connection is identified by the four values <b>source IP, source port, destination IP, destination port</b>.</p>
+<h3>TCP vs UDP</h3><p><b>TCP</b> is reliable and ordered: handshake <code>SYN → SYN-ACK → ACK</code>, then data, then <code>FIN</code> to close (<code>RST</code> to abort). <b>UDP</b> just sends: faster, no guarantees (DNS, VoIP, games).</p>
+<div class="tw"><table><tr><th>Port</th><th>Service</th><th>Port</th><th>Service</th></tr><tr><td>21</td><td>FTP</td><td>80</td><td>HTTP</td></tr><tr><td>22</td><td>SSH</td><td>110 / 143</td><td>POP3 / IMAP</td></tr><tr><td>23</td><td>Telnet</td><td>443</td><td>HTTPS</td></tr><tr><td>25</td><td>SMTP</td><td>445</td><td>SMB</td></tr><tr><td>53</td><td>DNS</td><td>3389</td><td>RDP</td></tr></table></div>
+<h3>Port states (what scanners see)</h3><ul><li><b>Open</b>: service replies SYN-ACK</li><li><b>Closed</b>: host replies RST</li><li><b>Filtered</b>: no reply (a firewall drops it)</li></ul>
+<h3>Lab</h3><pre>ss -tn              # active TCP connections
+ss -tulpn           # what is listening, and which program</pre><p>Open a website, run <code>ss -tn</code>, and find the connection to port 443.</p>
+<h3>Check yourself</h3><details><summary>You send SYN and get RST back. State of the port?</summary>Closed.</details><details><summary>Why is Telnet (23) discouraged?</summary>It sends everything, including passwords, in clear text. Use SSH.</details></article>
+
+<article data-p="Phase 1: Networking" data-t="4. DNS & DHCP"><h2>DNS and DHCP</h2>
+<h3>DHCP (DORA)</h3><p>A new device broadcasts <b>D</b>iscover, a server sends an <b>O</b>ffer, the device <b>R</b>equests it, the server <b>A</b>cknowledges. You receive an IP, mask, gateway and DNS server automatically.</p>
+<h3>DNS</h3><p>Your device asks a <b>recursive resolver</b>, which walks root → TLD (<code>.com</code>) → the domain's <b>authoritative</b> server and caches the answer for its <b>TTL</b>.</p>
+<div class="tw"><table><tr><th>Record</th><th>Meaning</th></tr><tr><td>A / AAAA</td><td>Name to IPv4 / IPv6</td></tr><tr><td>CNAME</td><td>Alias to another name</td></tr><tr><td>MX</td><td>Mail servers</td></tr><tr><td>NS</td><td>Authoritative name servers</td></tr><tr><td>TXT</td><td>Free text (SPF, verification)</td></tr><tr><td>PTR</td><td>IP to name (reverse)</td></tr></table></div>
+<div class="tip"><b>Security:</b> DNS spoofing/cache poisoning, typosquatted domains, and <b>DNS tunnelling</b> (hiding data in queries). Defenders watch for odd, very long or very frequent queries.</div>
+<h3>Lab</h3><pre>nslookup example.com
+dig example.com MX
+dig +trace example.com   # watch the delegation chain</pre>
+<h3>Check yourself</h3><details><summary>Which record decides where email is delivered?</summary>MX.</details></article>
+
+<article data-p="Phase 1: Networking" data-t="5. HTTP & HTTPS/TLS"><h2>HTTP, HTTPS and TLS</h2>
+<p>A request has a <b>method</b> (GET, POST...), a path, <b>headers</b> and sometimes a body. The response has a <b>status code</b>, headers and a body. HTTP is stateless, so sites use <b>cookies</b> to remember you.</p>
+<pre>GET /login HTTP/1.1
+Host: example.com
+User-Agent: curl/8
+Cookie: session=abc123</pre>
+<p>Status classes: 2xx success, 3xx redirect (301 moved), 4xx client error (403 forbidden, 404 not found), 5xx server error.</p>
+<h3>TLS in short</h3><ol><li>Server presents a <b>certificate</b>; your browser checks it was issued by a trusted CA for that domain.</li><li>Both sides agree a shared key using asymmetric crypto.</li><li>All data is then encrypted with fast symmetric crypto.</li></ol>
+<p>HTTPS hides page content and cookies from eavesdroppers, but not which domain/IP you contact.</p>
+<h3>Lab</h3><pre>curl -I https://example.com        # response headers only
+curl -v https://example.com 2&gt;&amp;1 | head -40   # see the TLS handshake</pre><p>Then open browser DevTools (F12) → Network and inspect the headers and cookies of any site.</p>
+<h3>Check yourself</h3><details><summary>What does a 403 mean versus a 404?</summary>403: the page exists but you are not allowed. 404: it was not found.</details></article>
+
+<article data-p="Phase 1: Networking" data-t="6. Wireshark lab"><h2>Wireshark lab: see the packets</h2>
+<p>Install Wireshark on your own machine and capture only your own traffic.</p>
+<h3>Useful display filters</h3><pre>dns
+http
+icmp
+ip.addr == 192.168.1.1
+tcp.port == 443
+tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</pre>
+<h3>Exercises</h3><ol><li><b>ICMP:</b> start a capture, run <code>ping -c 3 example.com</code>, filter <code>icmp</code>. Find an echo request and its reply.</li><li><b>DNS:</b> run <code>nslookup example.com</code>, filter <code>dns</code>. Identify the query, the response, and the A record.</li><li><b>TCP handshake:</b> run <code>curl http://example.com</code>, filter <code>tcp</code>. Find SYN, SYN-ACK, ACK.</li><li><b>Plain HTTP:</b> right-click an HTTP packet → Follow → TCP Stream. Read the request in clear text, which is why HTTPS matters.</li><li><b>Count connections:</b> use the SYN-only filter while browsing and count the new connections.</li></ol>
+<div class="tip"><b>Checkpoint:</b> write a one-page explanation of what happens when you visit a URL (DHCP/IP, ARP to gateway, DNS, TCP handshake, TLS, HTTP) with a screenshot of each step.</div></article>
+
+<article data-p="Phase 2: Linux" data-t="7. Filesystem & navigation"><h2>Linux filesystem and navigation</h2>
+<div class="tw"><table><tr><th>Path</th><th>Contents</th></tr><tr><td>/</td><td>Root of everything</td></tr><tr><td>/home</td><td>User files</td></tr><tr><td>/etc</td><td>System configuration</td></tr><tr><td>/var/log</td><td>Logs</td></tr><tr><td>/tmp</td><td>Temporary files</td></tr><tr><td>/bin, /usr</td><td>Programs</td></tr><tr><td>/proc</td><td>Live process and kernel info</td></tr></table></div>
+<p><b>Absolute</b> paths start with <code>/</code>; <b>relative</b> ones start from where you are. Names starting with <code>.</code> are hidden.</p>
+<pre>pwd; ls -la; cd /var/log; cd ~; cd ..
+mkdir lab; touch lab/a.txt; cp lab/a.txt lab/b.txt
+mv lab/b.txt lab/c.txt; rm lab/c.txt
+cat /etc/os-release; less /var/log/syslog
+head -n 5 f; tail -n 5 f; tail -f f
+find / -name "*.conf" 2&gt;/dev/null</pre>
+<h3>Lab</h3><p>Create <code>~/lab</code>, make five files, hide one, find all files in your home folder modified today with <code>find ~ -mtime 0</code>.</p>
+<h3>Check yourself</h3><details><summary>Where would you look first for an application's logs?</summary><code>/var/log</code>.</details><details><summary>Why add 2&gt;/dev/null to find?</summary>It hides "permission denied" error noise.</details></article>
+
+<article data-p="Phase 2: Linux" data-t="8. Users, permissions & sudo"><h2>Users, permissions and sudo</h2>
+<p><code>/etc/passwd</code> lists accounts; <code>/etc/shadow</code> holds password hashes and is readable only by root. <code>id</code> shows who you are and your groups. <code>sudo</code> runs one command as root; <code>su</code> switches user.</p>
+<pre>-rwxr-xr--  1 alice dev  run.sh
+ |||||||||
+ owner rwx, group r-x, others r--</pre>
+<p>Read=4, write=2, execute=1. <code>chmod 750 run.sh</code> = owner rwx, group r-x, others none. <code>chown alice:dev file</code> changes owner and group. <code>chmod u+x file</code> adds execute for the owner.</p>
+<div class="tip"><b>Audit your own machine:</b> files with the <b>SUID</b> bit run with the owner's privileges, so unusual ones are a classic privilege-escalation risk. List them with <code>find / -perm -4000 2&gt;/dev/null</code> and learn what each is for.</div>
+<h3>Lab</h3><pre>id; sudo whoami
+echo hi &gt; t.txt; chmod 000 t.txt; cat t.txt   # denied
+chmod 600 t.txt; cat t.txt</pre>
+<h3>Check yourself</h3><details><summary>What does chmod 644 give?</summary>Owner read+write; group and others read only.</details></article>
+
+<article data-p="Phase 2: Linux" data-t="9. Text processing & log analysis"><h2>Text processing and log analysis</h2>
+<p>Security work is largely reading logs. Chain small tools with the pipe <code>|</code>.</p>
+<pre>grep -i "error" f        # -i ignore case, -n line numbers
+grep -v "ok" f           # invert
+grep -rn "password" /etc 2&gt;/dev/null
+cut -d' ' -f1 f          # first column
+sort f | uniq -c | sort -nr   # count and rank
+awk '{print $1}' f       # print field 1</pre>
+<h3>Worked example: failed SSH logins by IP</h3>
+<pre>grep "Failed password" /var/log/auth.log \
+ | awk '{print $(NF-3)}' | sort | uniq -c | sort -nr | head</pre>
+<p>A line ends with <code>from 10.0.0.5 port 22 ssh2</code>, so <code>$(NF-3)</code> is the IP. Lines for invalid users have a different layout, so always check a sample first.</p>
+<h3>Lab</h3><p>Create a fake log with 10 lines of <code>Failed password for root from 10.0.0.5 port 22 ssh2</code> (vary the IPs), then rank the IPs with the pipeline above.</p>
+<h3>Check yourself</h3><details><summary>What does sort | uniq -c | sort -nr do?</summary>Groups identical lines, counts them, then sorts by count, highest first.</details></article>
+
+<article data-p="Phase 2: Linux" data-t="10. Processes, services & network tools"><h2>Processes, services and network tools</h2>
+<pre>ps aux | head       # all processes
+top                 # live view (q to quit)
+kill 1234           # ask a process to stop; kill -9 forces
+systemctl status ssh
+sudo systemctl stop ssh
+crontab -l          # scheduled jobs</pre>
+<h3>Network tools</h3><pre>ip a ; ip route
+ping -c 3 8.8.8.8
+traceroute example.com
+ss -tulpn           # listening ports and owners
+curl -I https://example.com</pre>
+<h3>Mini lab: talk to yourself with netcat</h3><p>Open two terminals on your own machine. In the first run <code>nc -l 9000</code> (some versions need <code>nc -l -p 9000</code>). In the second run <code>nc 127.0.0.1 9000</code>. Type in either one and watch the text appear in the other, then check the connection with <code>ss -tn</code>.</p>
+<div class="tip"><b>Defender habit:</b> after any lab, run <code>ss -tulpn</code> and <code>ps aux</code> and ask "do I recognise everything?" Unknown listeners and processes are what incident responders hunt for.</div>
+<h3>Check yourself</h3><details><summary>Which command shows what program is listening on a port?</summary><code>ss -tulpn</code>.</details>
+<p><b>Checkpoint:</b> navigate, search files, manage permissions and read logs without looking anything up.</p></article>
+
+<article data-p="Phase 2: Windows" data-t="11. Windows & PowerShell"><h2>Windows essentials and PowerShell</h2>
+<div class="tw"><table><tr><th>Location</th><th>Purpose</th></tr><tr><td>C:\Windows</td><td>The OS itself</td></tr><tr><td>C:\Users\name</td><td>User profile and files</td></tr><tr><td>C:\Program Files</td><td>Installed 64-bit apps</td></tr><tr><td>Registry (regedit)</td><td>Settings database (HKLM = machine, HKCU = current user)</td></tr><tr><td>services.msc</td><td>Background services</td></tr></table></div>
+<h3>Event IDs every defender knows</h3>
+<div class="tw"><table><tr><th>ID</th><th>Meaning</th></tr><tr><td>4624</td><td>Successful logon</td></tr><tr><td>4625</td><td>Failed logon</td></tr><tr><td>4688</td><td>New process created</td></tr><tr><td>4720</td><td>User account created</td></tr><tr><td>1102</td><td>Audit log cleared (suspicious)</td></tr></table></div>
+<h3>PowerShell basics</h3><p>Commands are <code>Verb-Noun</code> cmdlets that output objects, which you filter with <code>Where-Object</code> and select with <code>Select-Object</code>.</p>
+<pre>Get-Process | Sort-Object CPU -Descending | Select-Object -First 5
+Get-Service | Where-Object Status -eq "Running"
+Get-LocalUser
+Get-NetTCPConnection -State Listen
+Get-WinEvent -FilterHashtable @{LogName='Security';Id=4625} -MaxEvents 10
+Get-Help Get-Process -Examples</pre>
+<h3>Lab</h3><p>In your Windows VM, fail a login on purpose three times, then find the three 4625 events with the command above (run PowerShell as Administrator). Note the account name and logon type in each.</p>
+<h3>Check yourself</h3><details><summary>You see event 1102 on a server. Why does it matter?</summary>Someone cleared the audit log, a common attacker step to hide activity.</details><details><summary>What is the difference between HKLM and HKCU?</summary>HKLM applies to the whole machine; HKCU only to the current user.</details></article>
+
+<article data-p="Phase 3: Programming" data-t="12. Python fundamentals"><h2>Python fundamentals</h2>
+<p>Install Python 3 and run scripts with <code>python3 file.py</code>. Indentation defines blocks.</p>
+<pre>name = "alice"; port = 22          # str, int
+ports = [22, 80, 443]              # list
+user = {"name": "alice", "uid": 1000}   # dict
+for p in ports:
+    if p == 22:
+        print("SSH on", p)
+    elif p in (80, 443):
+        print("web on", p)
+
+def is_private(ip):
+    return ip.startswith(("10.", "192.168."))
+
+with open("notes.txt") as f:       # auto-closes the file
+    for line in f:
+        print(line.strip())</pre>
+<ul><li>Strings: <code>.split()</code>, <code>.strip()</code>, f-strings <code>f"{name}:{port}"</code></li><li>Errors: <code>try: ... except ValueError: ...</code></li><li>Libraries: <code>import socket, re, hashlib, subprocess</code></li></ul>
+<h3>Lab</h3><p>Write a script that reads a text file and prints the 5 most common words, using a dict to count. Then convert it into a function that takes a filename.</p>
+<h3>Check yourself</h3><details><summary>Why use <code>with open(...)</code>?</summary>It guarantees the file is closed even if an error occurs.</details></article>
+
+<article data-p="Phase 3: Programming" data-t="13. Python for security tasks"><h2>Python for security tasks</h2>
+<div class="tip">Only scan or test machines you own or are authorised to test. Start with <code>127.0.0.1</code>.</div>
+<h3>1. Simple TCP port checker</h3>
+<pre>import socket
+def scan(host, ports):
+    found = []
+    for p in ports:
+        with socket.socket() as s:
+            s.settimeout(0.5)
+            if s.connect_ex((host, p)) == 0:
+                found.append(p)
+    return found
+print(scan("127.0.0.1", range(1, 1025)))</pre>
+<p><code>connect_ex</code> returns 0 on success (open port). Compare your result to <code>ss -tulpn</code>.</p>
+<h3>2. Log parser</h3>
+<pre>import re
+from collections import Counter
+pat = re.compile(r"Failed password for (?:invalid user )?(\S+) from (\d+\.\d+\.\d+\.\d+)")
+ips = Counter()
+with open("auth.log") as f:
+    for line in f:
+        m = pat.search(line)
+        if m:
+            ips[m.group(2)] += 1
+for ip, n in ips.most_common(5):
+    print(ip, n)</pre>
+<h3>3. File integrity hash</h3>
+<pre>import hashlib
+def sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
+print(sha256("notes.txt"))</pre>
+<p>Change one character in the file and the hash changes completely. That is how integrity checks and malware signatures work.</p>
+<h3>Projects</h3><ol><li>Extend the port checker to take a host and range from the command line (<code>sys.argv</code> or <code>argparse</code>) and use threads to speed it up.</li><li>Make the log parser alert when one IP exceeds 5 failures.</li><li>Build a script that stores hashes of a folder and reports files that changed later.</li></ol>
+<h3>Check yourself</h3><details><summary>What does a hash mismatch tell you?</summary>The file changed (accidentally or maliciously), so integrity is broken.</details></article>
+
+<article data-p="Phase 4: Security+ concepts" data-t="14. Threats, attacks & malware"><h2>Threats, attacks and malware</h2>
+<h3>Threat actors</h3><p>Script kiddies (low skill), hacktivists (cause-driven), organised crime (money), nation-states (espionage, high resources), <b>insiders</b> (misuse access).</p>
+<h3>Social engineering</h3><ul><li><b>Phishing</b> (email), <b>smishing</b> (SMS), <b>vishing</b> (voice), <b>spear phishing</b> (targeted), <b>whaling</b> (executives)</li><li><b>Pretexting</b> (invented story), <b>tailgating</b> (following someone through a door), <b>BEC</b> (business email compromise)</li></ul>
+<h3>Malware</h3>
+<div class="tw"><table><tr><th>Type</th><th>Key trait</th></tr><tr><td>Virus</td><td>Needs a host file and user action</td></tr><tr><td>Worm</td><td>Self-spreads over networks</td></tr><tr><td>Trojan</td><td>Looks legitimate</td></tr><tr><td>Ransomware</td><td>Encrypts data for payment</td></tr><tr><td>Rootkit</td><td>Hides deep in the OS</td></tr><tr><td>Keylogger / spyware</td><td>Records activity</td></tr><tr><td>Botnet</td><td>Many infected machines under one controller</td></tr></table></div>
+<h3>Common attacks</h3><ul><li><b>On-path (MITM)</b>, <b>DoS/DDoS</b>, <b>replay</b>, <b>DNS poisoning</b></li><li><b>Password attacks:</b> brute force, dictionary, spraying (one password across many accounts), credential stuffing</li><li><b>Application:</b> SQL injection, XSS, CSRF, buffer overflow, directory traversal</li><li><b>Zero-day:</b> a flaw with no patch yet</li></ul>
+<h3>Check yourself</h3><details><summary>Spraying vs brute force?</summary>Brute force tries many passwords on one account; spraying tries a few common passwords across many accounts to avoid lockouts.</details><details><summary>Which malware self-spreads without user action?</summary>A worm.</details></article>
+
+<article data-p="Phase 4: Security+ concepts" data-t="15. Cryptography & identity"><h2>Cryptography and identity</h2>
+<div class="tw"><table><tr><th>Type</th><th>Idea</th><th>Examples / use</th></tr><tr><td>Symmetric</td><td>One shared key</td><td>AES; fast, bulk data</td></tr><tr><td>Asymmetric</td><td>Public + private key pair</td><td>RSA, ECC; key exchange, signatures</td></tr><tr><td>Hashing</td><td>One-way fingerprint</td><td>SHA-256; integrity, password storage</td></tr></table></div>
+<ul><li>Encrypt with the recipient's <b>public</b> key; only their <b>private</b> key decrypts.</li><li>A <b>digital signature</b> is made with your private key and checked with your public key, proving origin and integrity.</li><li><b>PKI:</b> certificate authorities sign certificates that bind a public key to an identity. Revocation uses CRL/OCSP.</li><li>Passwords: use salted, slow hashes (bcrypt, Argon2), never plain SHA alone.</li></ul>
+<h3>Identity and access (IAM)</h3><ul><li><b>AAA:</b> authentication (who are you), authorisation (what can you do), accounting (what did you do)</li><li>Factors: something you know, have, are (plus where you are)</li><li><b>MFA</b>, <b>SSO</b>, <b>least privilege</b>, <b>RBAC</b> (permissions by role), separation of duties</li></ul>
+<h3>Check yourself</h3><details><summary>You want to prove a file came from you. What do you use?</summary>A digital signature made with your private key.</details><details><summary>Why use TLS with both asymmetric and symmetric crypto?</summary>Asymmetric safely agrees a key; symmetric is fast for the actual data.</details></article>
+
+<article data-p="Phase 4: Security+ concepts" data-t="16. Network defence, operations & risk"><h2>Network defence, operations and risk</h2>
+<h3>Network controls</h3><ul><li><b>Firewall:</b> allow/deny by IP, port, protocol (stateful ones track connections). <b>WAF</b> protects web apps.</li><li><b>IDS</b> detects and alerts; <b>IPS</b> also blocks.</li><li><b>Segmentation</b> and a <b>DMZ</b> limit blast radius; <b>VPN</b> encrypts traffic across untrusted networks.</li><li><b>Zero trust:</b> never trust by location; verify every request.</li><li>Prefer secure protocols: SSH over Telnet, HTTPS over HTTP, SFTP over FTP.</li></ul>
+<h3>Security operations</h3><ul><li><b>Logging and SIEM:</b> collect, correlate and alert.</li><li><b>Vulnerability management:</b> scan, prioritise (CVSS score), patch, verify.</li><li><b>Incident response:</b> Preparation → Detection → Containment → Eradication → Recovery → Lessons learned.</li><li><b>Digital forensics:</b> preserve evidence, keep a chain of custody.</li></ul>
+<h3>Risk and resilience</h3>
+<p>Risk = likelihood × impact. Responses: <b>mitigate, transfer</b> (insurance), <b>accept, avoid</b>. <b>RTO</b> is how fast you must be back up; <b>RPO</b> is how much data loss is tolerable. Backups follow the <b>3-2-1</b> rule: 3 copies, 2 media types, 1 offsite.</p>
+<h3>Check yourself</h3><details><summary>An IPS vs an IDS?</summary>An IDS only alerts; an IPS can block the traffic.</details><details><summary>Backups are taken nightly. What is the worst-case RPO?</summary>About 24 hours of data.</details>
+<div class="tip"><b>Exam tip:</b> download CompTIA's current Security+ objectives (free PDF), tick off each term as you can explain it in your own words, then use free practice questions to find gaps.</div></article>
+
+<article data-p="Phase 5A: Defender" data-t="A1. SOC work & MITRE ATT&CK"><h2>SOC work and MITRE ATT&amp;CK</h2>
+<p>A <b>Security Operations Centre</b> watches alerts. Tier 1 triages alerts, Tier 2 investigates, Tier 3 hunts threats and tunes detections. Most alerts are <b>false positives</b>, so the skill is quickly deciding what is real.</p>
+<h3>Triage questions</h3><ol><li><b>What</b> happened? <b>When</b>? <b>Which</b> host and account?</li><li>Is it a true or false positive? What is the evidence?</li><li>What is the impact and does it spread (other hosts, other accounts)?</li><li>Escalate, contain, or close with notes.</li></ol>
+<h3>ATT&amp;CK tactics (attacker goals, in rough order)</h3><p>Reconnaissance → Initial Access → Execution → Persistence → Privilege Escalation → Defense Evasion → Credential Access → Discovery → Lateral Movement → Collection → Command and Control → Exfiltration → Impact. Each tactic has <b>techniques</b> (e.g. T1110 Brute Force under Credential Access). Browse attack.mitre.org to see detection advice for each.</p>
+<h3>Lab</h3><p>Pick five techniques (Brute Force, Valid Accounts, Scheduled Task, PowerShell, Account Discovery). For each, write which log would show it in your lab (auth.log, Windows 4625/4688, etc.).</p>
+<h3>Check yourself</h3><details><summary>Tactic vs technique?</summary>A tactic is the goal (why); a technique is how the attacker achieves it.</details></article>
+
+<article data-p="Phase 5A: Defender" data-t="A2. Install Wazuh (SIEM/XDR)"><h2>Install Wazuh in your lab</h2>
+<p>Wazuh is free, open-source security monitoring. It collects logs from agents on your machines, applies detection rules and shows alerts in a dashboard.</p>
+<h3>Create the server VM</h3><p>Ubuntu Server LTS, <b>4 GB RAM minimum (more is better)</b>, 2 CPUs, 40 GB disk. Give it a NAT adapter for installation plus the internal <code>labnet</code> adapter, then take a snapshot.</p>
+<h3>Install</h3><p>Use the all-in-one quickstart from Wazuh's documentation (the exact command and version change, so copy it from the official docs at documentation.wazuh.com). It looks like this:</p>
+<pre>curl -sO https://packages.wazuh.com/&lt;version&gt;/wazuh-install.sh
+sudo bash ./wazuh-install.sh -a</pre>
+<p>At the end it prints the dashboard admin password. Save it. Browse to <code>https://&lt;server-ip&gt;</code> and accept the self-signed certificate warning (fine in a lab).</p>
+<h3>Add agents</h3><p>In the dashboard use the <b>Deploy new agent</b> wizard for Ubuntu and for Windows. It generates the install command with your server IP. Run it on the target, start the agent service, and confirm both appear as <b>Active</b>.</p>
+<h3>Checkpoint</h3><p>Two active agents. Snapshot the server as <code>wazuh-installed</code>. If the VM is slow, shut other VMs down first.</p></article>
+
+<article data-p="Phase 5A: Defender" data-t="A3. Detect a brute-force attack"><h2>Lab: detect an SSH brute-force attack</h2>
+<div class="tip">Attack only your own Ubuntu VM on the internal lab network. Snapshot first.</div>
+<h3>1. Attack from Kali</h3>
+<pre>printf "123456\npassword\nletmein\nsummer2024\nqwerty\n" &gt; small.txt
+hydra -l student -P small.txt ssh://10.10.10.20 -t 4</pre>
+<p>(Set a weak known password for the <code>student</code> user on the target so the run ends in a success.)</p>
+<h3>2. Investigate as the defender</h3>
+<pre>sudo grep "Failed password" /var/log/auth.log | tail
+sudo grep "Failed password" /var/log/auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -nr
+sudo grep "Accepted" /var/log/auth.log</pre>
+<p>Look for: many failures from one IP in a short time, then an <b>Accepted</b> login from the same IP. That pattern means the attack probably <b>succeeded</b>. Check the Wazuh dashboard for the authentication-failure and brute-force alerts, and note the rule IDs and timestamps.</p>
+<h3>3. Respond</h3><pre>sudo ufw deny from 10.10.10.10     # block the source
+sudo passwd student                # reset the compromised password
+sudo apt install fail2ban -y       # auto-ban repeat offenders</pre>
+<p>Also move SSH to key-only login (<code>PasswordAuthentication no</code> in <code>/etc/ssh/sshd_config</code>) and restart ssh.</p>
+<h3>4. Write it up</h3><p>Timeline, evidence (log lines, alert screenshots), ATT&amp;CK mapping (T1110), and the fixes. Repeat on Windows by generating failed logons and finding event 4625 followed by 4624.</p></article>
+
+<article data-p="Phase 5A: Defender" data-t="A4. Triage & incident reports"><h2>Triage and incident reports</h2>
+<h3>Phishing email checklist</h3><ul><li>Compare <b>From</b> with <b>Return-Path</b> and <b>Reply-To</b>; check header results for SPF, DKIM, DMARC.</li><li>Hover links: does the real domain match? Watch lookalikes (<code>paypa1.com</code>).</li><li>Never open attachments on your host. Hash the file (<code>sha256sum</code>) and look up the hash in a reputation service rather than uploading private data.</li><li>Outcome: delete, block sender/domain, warn users, check whether anyone clicked.</li></ul>
+<h3>Suspicious process checklist</h3><ul><li>Name and <b>path</b> (system tools should be in system folders)</li><li><b>Parent process</b> (why did a Word document start PowerShell?)</li><li>Network connections and when it started</li><li>Signed or unsigned, hash reputation</li></ul>
+<h3>IOCs</h3><p>Indicators of compromise: IPs, domains, file hashes, filenames, registry keys. Record them so others can search for the same attacker.</p>
+<h3>Incident report structure</h3><pre>Summary (2-3 lines)      Impact
+Timeline (UTC times)     Evidence / IOCs
+Root cause               Actions taken
+Recommendations          Lessons learned</pre>
+<h3>Lab</h3><p>Write a full report for the brute-force lab in Lesson A3 using this template. Keep it to one page.</p></article>
+
+<article data-p="Phase 5B: Hacker" data-t="H1. Recon & Nmap"><h2>Reconnaissance and Nmap</h2>
+<p>Testing follows a rhythm: <b>recon → scan → enumerate → test → document</b>. You are only ever scanning your own lab.</p>
+<pre>nmap -sn 10.10.10.0/24            # which hosts are up
+nmap 10.10.10.20                  # top 1000 TCP ports
+nmap -sV -sC 10.10.10.20          # service versions + default scripts
+nmap -p- --min-rate 1000 10.10.10.20   # all 65535 ports
+nmap -sU --top-ports 20 10.10.10.20    # common UDP
+nmap -A -oN scan.txt 10.10.10.30  # aggressive + save output</pre>
+<p>States: <b>open</b>, <b>closed</b>, <b>filtered</b>. <code>-sV</code> shows software versions, which you compare against known vulnerabilities. Noisy scans are easy to detect.</p>
+<h3>Lab</h3><ol><li>Scan the Ubuntu and Windows VMs and list ports, services and versions in a table.</li><li>Compare with <code>ss -tulpn</code> on Ubuntu. Do they match?</li><li>Look at what your scan looked like in Wazuh or the logs. This is the defender view.</li><li>Close one unneeded service and rescan to confirm the attack surface shrank.</li></ol>
+<h3>Check yourself</h3><details><summary>Why is a full-port scan useful?</summary>Services sometimes run on non-standard ports that the default top-1000 scan misses.</details></article>
+
+<article data-p="Phase 5B: Hacker" data-t="H2. Web basics & Burp Suite"><h2>Web testing basics and Burp Suite</h2>
+<p>Burp Suite Community is a proxy that sits between your browser and a site so you can see and change requests.</p>
+<h3>Setup</h3><ol><li>Install Burp Community on Kali (usually preinstalled).</li><li>Start a temporary project; Proxy → Intercept → open Burp's built-in browser.</li><li>Browse to your Juice Shop (<code>http://10.10.10.20:3000</code>).</li></ol>
+<h3>Key tools</h3><ul><li><b>HTTP history:</b> every request/response</li><li><b>Intercept:</b> pause and edit a request</li><li><b>Repeater:</b> resend one request with changes and compare responses</li></ul>
+<h3>OWASP Top 10 (2021 edition; check the current list)</h3><p>Broken Access Control, Cryptographic Failures, Injection, Insecure Design, Security Misconfiguration, Vulnerable and Outdated Components, Identification and Authentication Failures, Software and Data Integrity Failures, Logging and Monitoring Failures, SSRF.</p>
+<h3>Lab</h3><p>Log into Juice Shop with an account you register. In HTTP history find the login request, the JSON body and the token or cookie in the response. Send a request to Repeater and change a parameter. Open Juice Shop's score board to see its challenge list.</p></article>
+
+<article data-p="Phase 5B: Hacker" data-t="H3. Injection & XSS (Juice Shop)"><h2>Injection and cross-site scripting</h2>
+<div class="tip">Practise only on Juice Shop, DVWA or PortSwigger's labs.</div>
+<h3>SQL injection</h3><p>If an app builds a query by pasting input into a string, input can change the query's logic:</p>
+<pre>SELECT * FROM users WHERE email='$e' AND password='$p'
+-- input $e = ' OR 1=1--   makes the check always true</pre>
+<p>Try this idea on Juice Shop's login challenge. Then compare to PortSwigger's SQL injection labs for the full progression (UNION attacks, blind SQLi).</p>
+<h3>XSS</h3><p><b>Reflected</b> (in the request), <b>stored</b> (saved on the server), <b>DOM-based</b> (in browser JavaScript). A harmless proof is making the page run <code>alert(1)</code>; attackers use the same flaw to steal cookies or act as the victim.</p>
+<h3>Defences</h3><ul><li>Parameterised queries / prepared statements</li><li>Output encoding, input validation</li><li>Content Security Policy, HttpOnly and Secure cookie flags</li></ul>
+<h3>Check yourself</h3><details><summary>Why are parameterised queries safe?</summary>The database treats input strictly as data, never as part of the SQL command.</details></article>
+
+<article data-p="Phase 5B: Hacker" data-t="H4. Access control & password attacks"><h2>Access control and password attacks</h2>
+<h3>Broken access control (IDOR)</h3><p>If <code>/basket/1</code> shows your basket and changing it to <code>/basket/2</code> shows another user's, the server is not checking ownership. In Burp, change the ID in Repeater and compare the responses. Fix: check authorisation on the server for every object.</p>
+<h3>Why password storage matters: crack your own hashes</h3>
+<pre>echo -n "summer2024" | md5sum | cut -d' ' -f1 &gt; hashes.txt
+echo -n "Tr0ub4dor&amp;3-x9" | md5sum | cut -d' ' -f1 &gt;&gt; hashes.txt
+john --format=raw-md5 --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt
+john --show --format=raw-md5 hashes.txt</pre>
+<p>(On Kali the rockyou wordlist may need <code>sudo gunzip /usr/share/wordlists/rockyou.txt.gz</code> first.) The common password falls in seconds; the long random one does not. Fast unsalted hashes (MD5, SHA-1) are poor for passwords; use bcrypt or Argon2 with a salt.</p>
+<h3>Online guessing</h3><p>You already ran Hydra against your own SSH in Lesson A3. Defences: rate limiting, lockouts, MFA, strong passwords.</p>
+<h3>Check yourself</h3><details><summary>What does a salt prevent?</summary>It stops precomputed hash tables and makes identical passwords hash differently.</details></article>
+
+<article data-p="Phase 5B: Hacker" data-t="H5. Privilege escalation & reporting"><h2>Privilege escalation concepts and reporting</h2>
+<p>After gaining a low-privilege account, testers look for ways to gain more. Learn this by <b>creating the weaknesses yourself</b> on your Ubuntu lab VM and then finding them.</p>
+<h3>Build a weakness (Ubuntu VM, snapshot first)</h3><pre>sudo useradd -m lowuser &amp;&amp; sudo passwd lowuser
+echo "lowuser ALL=(ALL) NOPASSWD: /usr/bin/find" | sudo tee /etc/sudoers.d/lowuser</pre>
+<h3>Find it as the low-privilege user</h3><pre>su - lowuser
+sudo -l                                   # what can I run as root?
+find / -perm -4000 2&gt;/dev/null            # SUID files
+cat /etc/crontab; ls -l /etc/cron.*       # scheduled jobs</pre>
+<p>Look up the program on GTFOBins (gtfobins.github.io) to see why allowing certain binaries via sudo is dangerous, then <b>fix it</b> by removing the sudoers entry and re-checking.</p>
+<h3>Enumeration checklist</h3><ul><li>Sudo rights, SUID files, writable scripts run by root</li><li>Outdated kernel/services, passwords or keys in files</li></ul>
+<h3>Report writing</h3><p>For each finding: title, severity (CVSS or Low/Medium/High), affected system, steps to reproduce, impact, remediation. Be factual and reproducible. A report with fixes is worth more than a flag.</p></article>
+
+<article data-p="Phase 6: Get hired" data-t="J1. Portfolio & write-ups"><h2>Portfolio and write-ups</h2>
+<h3>Repo structure</h3><pre>security-labs/
+  README.md        (who you are, skills, links)
+  00-lab-setup/
+  01-networking/   wireshark-url-journey.md
+  02-linux/
+  05a-defender/    ssh-bruteforce-detection.md
+  05b-hacker/      juice-shop-sqli.md, nmap-lab.md
+  scripts/         portscan.py, logparser.py</pre>
+<h3>Five flagship write-ups to finish</h3><ol><li>What happens when you visit a URL (Wireshark evidence)</li><li>Detect an SSH brute force (attack + logs + fix)</li><li>Nmap scan before and after hardening</li><li>Juice Shop: injection and access control findings</li><li>A phishing email analysis with IOCs</li></ol>
+<h3>Résumé bullets (show results)</h3><p>Weak: "Learned Wireshark." Strong: "Captured and analysed TCP/DNS/TLS traffic in a home lab; documented each step of a web request with packet evidence."</p>
+<h3>Checkpoint</h3><p>Five polished write-ups, a clear README, and two scripts with comments on GitHub.</p></article>
+
+<article data-p="Phase 6: Get hired" data-t="J2. Certifications & Security+ plan"><h2>Certifications and the Security+ plan</h2>
+<h3>8–10 week Security+ plan (about 10 h/week)</h3>
+<div class="tw"><table><tr><th>Weeks</th><th>Focus</th></tr><tr><td>1–2</td><td>Threats, malware, social engineering (Lesson 14)</td></tr><tr><td>3–4</td><td>Cryptography, identity, PKI (Lesson 15)</td></tr><tr><td>5–6</td><td>Network security, architecture, cloud (Lesson 16 + Phase 1)</td></tr><tr><td>7–8</td><td>Operations, incident response, risk, compliance</td></tr><tr><td>9–10</td><td>Practice exams, weak-area review, performance-based question practice</td></tr></table></div>
+<p>Use CompTIA's current exam objectives as your checklist. Book the exam when practice scores are consistently above about 85% and you can explain each topic in your own words. On exam day read each question fully, mark hard ones and return, and manage your time on the performance-based questions.</p>
+<h3>What comes after</h3><ul><li><b>Defensive:</b> CySA+, then GIAC/blue-team certifications</li><li><b>Offensive:</b> eJPT (entry), PNPT, then OSCP</li><li>Prices, formats and free-training offers change often, so check each provider's site first.</li></ul>
+<p>A certification gets your résumé noticed; your portfolio proves you can do the work. Do both.</p></article>
+
+<article data-p="Phase 6: Get hired" data-t="J3. Job search & interviews"><h2>Job search and interviews</h2>
+<h3>Realistic entry roles</h3><p>Help desk / IT support, junior SOC analyst (Tier 1), security analyst, IT auditor, vulnerability analyst. Many people start in IT support and move into security within 1–2 years. Pure penetration-testing roles usually need more experience.</p>
+<h3>Practice answers (explain in your own words)</h3>
+<details><summary>What happens when you type a URL?</summary>DNS lookup, TCP handshake, TLS handshake, HTTP request, server response, browser renders. Mention ARP/gateway for local delivery.</details>
+<details><summary>An alert shows 200 failed logins from one IP. What do you do?</summary>Check whether any login succeeded afterwards, identify the account and host, block the IP, reset the password if needed, check for other activity from that IP, and document it.</details>
+<details><summary>IDS vs IPS?</summary>An IDS detects and alerts; an IPS sits inline and can block.</details>
+<details><summary>How would you secure a new Linux server?</summary>Patch, remove unneeded services, firewall, SSH keys with password login off, least privilege, logging and monitoring, backups.</details>
+<h3>Where to look</h3><p>Company career pages, LinkedIn, local job boards; search for "SOC analyst", "junior security analyst", "IT support". Join CTFs (ctftime.org lists events) and local meetups; contacts and a visible portfolio matter more than applying blind.</p>
+<h3>Your 90-day plan</h3><ol><li>Days 1–30: finish write-ups, tidy GitHub, build résumé.</li><li>Days 31–60: take Security+, apply to 5 roles a week.</li><li>Days 61–90: interview practice, one new lab per week, network with people in the field.</li></ol>
+<div class="tip">Work ethically: only test what you are authorised to test, protect any data you handle, and report honestly. Your reputation is your most valuable asset.</div></article>
+
+<script>
+const A=[...document.querySelectorAll("article")];let D={},cur=0;
+try{D=JSON.parse(localStorage.getItem("sl2")||"null")}catch(e){}
+if(!D){D={};try{const O=JSON.parse(localStorage.getItem("sl1")||"{}"),old=A.filter(a=>!a.dataset.p.startsWith("Phase 0"));Object.keys(O).forEach(i=>{if(old[i])D[old[i].dataset.t]=1})}catch(e){}}
+const sv=()=>{try{localStorage.setItem("sl2",JSON.stringify(D))}catch(e){}};
+function nav(){let h="",p="";A.forEach((a,i)=>{if(a.dataset.p!=p){p=a.dataset.p;h+=`<b>${p.toUpperCase()}</b>`}h+=`<button data-i="${i}" class="${i==cur?"on":""}">${D[a.dataset.t]?"✅ ":""}${a.dataset.t}</button>`});
+document.getElementById("nav").innerHTML=h;document.getElementById("pr").textContent=Object.keys(D).length+"/"+A.length+" lessons done";
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>go(+b.dataset.i))}
+function go(i){cur=i;A.forEach((a,j)=>a.classList.toggle("on",j==i));A.forEach(a=>{a.querySelector(".done")?.remove();a.querySelector(".nb")?.remove()});
+const a=A[i];a.insertAdjacentHTML("beforeend",`<label class="done"><input type="checkbox" ${D[a.dataset.t]?"checked":""}> Mark lesson complete</label><div class="nb"><button ${i?"":"disabled style='opacity:.4'"} id="pv">← Prev</button><button id="nx" ${i<A.length-1?"":"disabled style='opacity:.4'"}>Next →</button></div>`);
+a.querySelector("input").onchange=e=>{const t=a.dataset.t;if(e.target.checked)D[t]=1;else delete D[t];sv();nav()};
+a.querySelector("#pv").onclick=()=>i&&go(i-1);a.querySelector("#nx").onclick=()=>i<A.length-1&&go(i+1);
+document.getElementById("main").appendChild(a);nav();scrollTo(0,0)}
+A.forEach(a=>document.getElementById("main").appendChild(a));go(0);
+</script></body></html>
